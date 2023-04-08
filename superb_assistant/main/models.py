@@ -1,11 +1,24 @@
 import datetime
+import random
+import string
 
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.db import models
 
+def rand():
+    return ''.join(random.choice(string.ascii_lowercase) for i in range(13))
+#генерируем случайную строку
 
-class Student(User):
+class Room(models.Model):
+    code = models.CharField(max_length=13, unique=True, default=rand())
+    name = models.CharField(max_length=10, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Student(models.Model):
     SIMPLE_STUDENT = 0
     STUDENT_WITH_CAPABILITIES = 1
     HEADMAN = 2
@@ -17,31 +30,20 @@ class Student(User):
 
     ]
     permission = models.SmallIntegerField(choices=PERMISSION, default=SIMPLE_STUDENT)
-    room = models.OneToOneField(Group, on_delete=models.CASCADE())
-
-    class Meta:
-        proxy = True
-        verbose_name = "Студент"
-
-    def __str__(self):
-        return f'{self.last_name} {self.fist_name}'
-
-
-class Room(Group):
-    code = models.CharField(unique=True)
-
-    class Meta:
-        proxy = True
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField
+    last_name = models.CharField
 
     def __str__(self):
-        return self.name
+        return f'{self.last_name} {self.first_name}'
 
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField
     time = models.DateTimeField(auto_now_add=True)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE())
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -55,7 +57,7 @@ class Schedule(models.Model):
     lesson_on_thursday = models.CharField(max_length=50, blank=True)
     lesson_on_friday = models.CharField(max_length=50, blank=True)
     lesson_on_saturday = models.CharField(max_length=50, blank=True)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE())
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
 
 class AttendanceLog(models.Model):
@@ -75,13 +77,13 @@ class AttendanceLog(models.Model):
     status = models.CharField(max_length=3, choices=STATUS, default=BE)
     date = models.DateField(default=datetime.date.today())
     lesson = models.CharField(max_length=100)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE())
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
 
 class StudyMaterial(models.Model):
     name = models.CharField(max_length=50)
     file = models.FileField
-    room = models.ForeignKey(Room, on_delete=models.CASCADE())
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -91,7 +93,7 @@ class Contact(models.Model):
     lesson = models.CharField(max_length=50, blank=True)
     teacher = models.CharField(max_length=100)
     contact = models.CharField(max_length=100)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE())
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.teacher
