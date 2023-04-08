@@ -19,12 +19,19 @@ class Student(User):
     permission = models.SmallIntegerField(choices=PERMISSION, default=SIMPLE_STUDENT)
     room = models.OneToOneField(Group, on_delete=models.CASCADE())
 
+    class Meta:
+        proxy = True
+        verbose_name = "Студент"
+
     def __str__(self):
         return f'{self.last_name} {self.fist_name}'
 
 
 class Room(Group):
-    code = models.CharField
+    code = models.CharField(unique=True)
+
+    class Meta:
+        proxy = True
 
     def __str__(self):
         return self.name
