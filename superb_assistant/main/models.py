@@ -7,16 +7,15 @@ from django.contrib.auth.models import Group
 from django.db import models
 
 def rand():
-    return ''.join(random.choice(string.ascii_lowercase) for i in range(13))
+    return ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(10))
 #генерируем случайную строку
 
 class Room(models.Model):
-    code = models.CharField(max_length=13, unique=True, default=rand())
+    code = models.CharField(max_length=10, unique=True, default = rand)
     name = models.CharField(max_length=10, unique=True)
 
     def __str__(self):
         return self.name
-
 
 class Student(models.Model):
     SIMPLE_STUDENT = 0
