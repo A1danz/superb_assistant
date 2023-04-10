@@ -59,6 +59,32 @@ class Schedule(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
 
+class Lesson(models.Model):
+    MONDAY = 1
+    TUESDAY = 2
+    WEDNESDAY = 3
+    THURSDAY = 4
+    FRIDAY = 5
+    SATURDAY = 6
+
+    DAY = [
+        (MONDAY, 'Понедельник'),
+        (THURSDAY, 'Вторник'),
+        (WEDNESDAY, 'Среда'),
+        (THURSDAY, 'Четверг'),
+        (FRIDAY, 'Пятница'),
+        (SATURDAY, 'Суббота')
+    ]
+    day = models.SmallIntegerField(choices=DAY)
+    start_time = models.TimeField
+    end_time = models.TimeField
+    name = models.CharField(max_length=50, blank=True)
+    schedule = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.day}: {self.name}'
+
+
 class AttendanceLog(models.Model):
     ILL = "ill"
     ABSENT = "abs"
