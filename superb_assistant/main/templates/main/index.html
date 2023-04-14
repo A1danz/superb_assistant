@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Superb Assistant
+{% endblock %}
+
+{% block basic_information %}
+    {% for elem in posts %}
+        <div>
+            <h3>{{elem.title}}</h3>>
+            <p>{{elem.text}}</p>
+        </div>>
+    {% endfor %}
+{% endblock %}

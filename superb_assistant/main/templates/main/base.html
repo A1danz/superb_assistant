@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+          <div class="header__container __container">
+            <div class="header__logo __logo">
+              <img src="img/logo.svg" alt="logo">
+            </div>
+            <div class="header__text __text">
+              <span>Чарнцев Егор, 11-201</span>
+            </div>
+          </div>
+        </header>
+        {% block basic_information %}{% endblock %}
+    </div>>
+</body>
+</html>
