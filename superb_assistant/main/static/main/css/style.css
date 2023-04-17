@@ -1,5 +1,5 @@
-/* Общие стили для всех страниц */
 {% load static %}
+/* Общие стили для всех страниц */
 
 @import {"{% static 'main/css/nullstyle.css' %}"};
 
