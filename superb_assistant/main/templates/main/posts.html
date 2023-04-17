@@ -5,7 +5,7 @@
 <div class="noticeboard">
     <div class="noticeboard__title">Доска объявлений</div>
     <div class="noticeboard__body">
-        {% for elem in post %}
+        {% for elem in posts %}
         <div class="noticeboard__infoblock">
             <div class="noticeboard__infoblock-header">
                 <div class="noticeboard__infoblock-title">
@@ -20,6 +20,7 @@
                 {{ elem.text }}
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
