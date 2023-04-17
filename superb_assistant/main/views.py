@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Post
+from .models import Post, AttendanceLog
 
 from django.http import HttpResponse
 
@@ -22,4 +22,5 @@ def materials(request):
 
 
 def attend(request):
-    return HttpResponse("this page about attendance log")
+    list = AttendanceLog.objects.all()
+    return render(request, "main/attendance log.html", {'list': list})

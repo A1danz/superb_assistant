@@ -35,8 +35,8 @@ class Student(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # def __str__(self):
-    #     return f'{self.last_name} {self.first_name}'
+    def __str__(self):
+        return self.user.__str__()
 
 
 class Post(models.Model):
@@ -93,6 +93,10 @@ class AttendanceLog(models.Model):
     date = models.DateField(default=datetime.date.today())
     lesson = models.CharField(max_length=100)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return f'{self.date}: {self.lesson}'
 
 
 class StudyMaterial(models.Model):
