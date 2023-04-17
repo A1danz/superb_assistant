@@ -81,12 +81,13 @@ header{
 
 .noticeboard{
   padding: 20px 10px 70px;
-  background-color: #fff;
+  background-color: #faf;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
+
 .noticeboard__title{
   font-weight: 700;
   font-size: 40px;
