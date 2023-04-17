@@ -1,23 +1,40 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible"
+        content="ie=edge">
+  <title>SuperbAssistant</title>
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+
 </head>
 <body>
-    <div class="wrapper">
-        <header>
-          <div class="header__container __container">
-            <div class="header__logo __logo">
-              <img src="img/logo.svg" alt="logo">
-            </div>
-            <div class="header__text __text">
-              <span>Чарнцев Егор, 11-201</span>
-            </div>
-          </div>
-        </header>
-        {% block basic_information %}{% endblock %}
-    </div>>
+  <div class="wrapper">
+    <header>
+      <div class="header__container __container">
+        <div class="header__logo __logo">
+          <img src="{% static 'main/images/logo.svg' %}" alt="logo">
+        </div>
+        <div class="header__text __text">
+          <span>Чарнцев Егор, 11-201</span>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="main__container __container">
+        <div class="buttons">
+          <a href="schedule.html" class="button__link"><div class="button">Расписание</div></a>
+          <a href="index.html" class="button__link"><div class="button active">Доска объявления</div></a>
+          <a href="#" class="button__link"><div class="button">Журнал посещаемости</div></a>
+          <a href="#" class="button__link"><div class="button">Учебные материалы</div></a>
+          <a href="#" class="button__link"><div class="button">Контакты преподователей</div></a>
+        </div>
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
 </body>
 </html>

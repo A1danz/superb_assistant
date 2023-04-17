@@ -1,0 +1,187 @@
+/* Общие стили для всех страниц */
+{% load static %}
+
+@import {"{% static 'main/css/nullstyle.css' %}"};
+
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;900&display=swap');
+
+*{
+  font-family: 'Mulish', sans-serif;
+}
+
+.wrapper {
+  overflow: hidden;
+  min-height: 100%;
+  background-color: #F5E7FF;
+}
+.__container{
+  max-width: 1169px;
+  margin: 0 auto;
+  padding: 0 5px;
+}
+header{
+  padding: 5px 0;
+  background-color: #fff;
+  border-bottom: 1px solid #000000;
+  margin: 0 0 24px 0;
+}
+
+.header__container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header__text{
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.main__container{
+  display: flex;
+  gap: 21px;
+}
+
+.buttons{
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.button{
+  display: flex;
+  background: linear-gradient(180deg, #A336F1 0%, rgba(0, 0, 0, 0) 100%), #992CE8;
+  border-radius: 28px;
+  max-width: 178px;
+  height: 55px;
+  padding: 12px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 24px;
+  color: #FFFFFF;
+}
+
+.button__link:active .button{
+  background: linear-gradient(0deg, #00FF29, #00FF29), linear-gradient(180deg, #A336F1 0%, rgba(0, 0, 0, 0) 100%), #992CE8;
+  background-blend-mode: hue, normal, normal;
+  border-radius: 28px;
+}
+
+.active{
+  background: linear-gradient(0deg, #00FF29, #00FF29), linear-gradient(180deg, #A336F1 0%, rgba(0, 0, 0, 0) 100%), #992CE8;
+  background-blend-mode: hue, normal, normal;
+  border-radius: 28px;
+}
+
+/*-----------------------------------------------------------*/
+
+/* Стили для главной страницы и для доски объявлений */
+
+.noticeboard{
+  padding: 20px 10px 70px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.noticeboard__title{
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 50px;
+  color: #6700B8;
+  padding: 0 0 20px 0;
+}
+
+.noticeboard__body{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.noticeboard__infoblock{
+  background-color: #EBEBEB;
+}
+
+.noticeboard__infoblock-header{
+  padding: 10px;
+  color: #000000;
+  border-bottom: 1px solid #000000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.noticeboard__infoblock-title{
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 31px;
+}
+
+.noticeboard__infoblock-text{
+  line-height: 18px;
+  padding: 5px;
+  color: #000000;
+}
+
+/*--------------------------------------------*/
+
+
+
+/* Стили для страницы с расписанием */
+
+.schedule{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 25px;
+}
+
+.schedule__title{
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 50px;
+  color: #6700B8;
+  padding: 0 0 20px 0;
+}
+
+.schedule__body{
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 5px repeat(6, 1fr);
+  gap: 20px;
+}
+
+.schedule__infoblock{
+  border: 1px solid #000000;
+}
+
+.schedule__infoblock-name{
+  padding: 0 15px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.schedule__infoblock-date{
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  color: #000000;
+  border-bottom: 1px solid #000000;
+}
+.schedule__infoblock-text{
+  padding: 50px 5px;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  color: #000000;
+}
