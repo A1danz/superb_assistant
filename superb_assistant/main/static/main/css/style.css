@@ -1,7 +1,6 @@
-{% load static %}
 /* Общие стили для всех страниц */
 
-@import {"{% static 'main/css/nullstyle.css' %}"};
+@import "nullstyle.css";
 
 @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;900&display=swap');
 
@@ -85,9 +84,8 @@ header{
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-}
 
+}
 .noticeboard__title{
   font-weight: 700;
   font-size: 40px;
@@ -100,7 +98,6 @@ header{
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 100%;
 }
 
 .noticeboard__infoblock{
@@ -114,7 +111,6 @@ header{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
 }
 
 
