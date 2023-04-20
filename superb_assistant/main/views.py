@@ -22,24 +22,54 @@ def signup(request):
 
 def index(request):
     posts = Post.objects.all()
-    return render(request, "main/index.html", {'posts': posts})
+
+    contex = {
+        'posts': posts,
+        'navbar': 'index'
+    }
+
+    return render(request, "main/index.html", context=contex)
 
 
 def contacts(request):
     contacts = Contact.objects.all()
-    return render(request, "main/contact.html", {'contacts': contacts})
+
+    contex = {
+        'contacts': contacts,
+        'navbar': 'contacts'
+    }
+
+    return render(request, "main/contact.html", context=contex)
 
 
 def materials(request):
     materials = StudyMaterial.objects.all()
-    return render(request, "main/train_material.html")
+
+    contex = {
+        'materials': materials,
+        'navbar': 'materials'
+    }
+
+    return render(request, "main/train_material.html", context=contex)
 
 
 def timetable(request):
     list = AttendanceLog.objects.all()
-    return render(request, "main/timetable.html", {'list': list})
+
+    contex = {
+        'list': list,
+        'navbar': 'timatable'
+    }
+
+    return render(request, "main/timetable.html", context=contex)
 
 
 def profile(request):
     students = Student.objects.all()
-    return render(request, "main/profile.html")
+
+    contex = {
+        'students': students,
+        'navbar': 'profile'
+    }
+
+    return render(request, "main/profile.html", context=contex)
