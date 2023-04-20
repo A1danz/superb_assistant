@@ -1,5 +1,6 @@
-{% load static %}
 <!doctype html>
+{% load static %}
+
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -19,11 +20,16 @@
           <a href=signup class="sign__link-up signup__link-up">РЕГИСТРАЦИЯ</a>
           <div class="sign__decor signup__decor"></div>
         </div>
-        <form class="sign__form">
+        <form class="sign__form" method = 'post'>
+          {% csrf_token %}
           <input type="text" class="input" placeholder="имя пользователя">
-          <input type="email" class="input" placeholder="электронная почта">
-          <label class="password__label">
-            <input type="password" class="input password" placeholder="пароль">
+          <!--<input type="email" class="input" placeholder="электронная почта">-->
+          <label class="password1">
+            <input type="password" class="input password" placeholder="пароль" required>
+            <i class="sign__eye uil uil-eye"></i>
+          </label>
+          <label class="password2">
+            <input type="password" class="input password" placeholder="подтвердите пароль" required>
             <i class="sign__eye uil uil-eye"></i>
           </label>
           <input type="submit" class="btn" value="ЗАРЕГИСТРИРОВАТЬСЯ">
