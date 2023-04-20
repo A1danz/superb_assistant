@@ -5,12 +5,10 @@ import string
 from django.contrib.auth.models import User
 from django.db import models
 
-
+# генерируем случайную строку
 def rand():
     return ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(10))
 
-
-# генерируем случайную строку
 
 class Room(models.Model):
     code = models.CharField(max_length=10, unique=True, default=rand)
