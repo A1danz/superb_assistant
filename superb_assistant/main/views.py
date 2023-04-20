@@ -1,7 +1,5 @@
 from django.shortcuts import render
-from .models import Post, AttendanceLog
-
-from django.http import HttpResponse
+from .models import Post, AttendanceLog, Contact, StudyMaterial, Student
 
 
 def index(request):
@@ -10,17 +8,20 @@ def index(request):
 
 
 def contacts(request):
-    return render(request, "main/contacts.html")
-
-
-def post(request):
-    return HttpResponse("this page about posts")
+    contacts = Contact.objects.all()
+    return render(request, "main/contact.html", {'contacts': contacts})
 
 
 def materials(request):
-    return HttpResponse("this page about study materials")
+    materials = StudyMaterial.objects.all()
+    return render(request, "main/train_material.html")
 
 
-def attend(request):
+def timetable(request):
     list = AttendanceLog.objects.all()
-    return render(request, "main/attendance log.html", {'list': list})
+    return render(request, "main/timetable.html", {'list': list})
+
+
+def profile(request):
+    students = Student.objects.all()
+    return render(request, "main/profile.html")

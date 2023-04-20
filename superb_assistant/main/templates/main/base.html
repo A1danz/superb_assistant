@@ -7,34 +7,28 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible"
         content="ie=edge">
-  <title>SuperbAssistant</title>
+  <title> {% block title %}{% endblock title %} </title>
   <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
-
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
 </head>
 <body>
   <div class="wrapper">
     <header>
       <div class="header__container __container">
-        <div class="header__logo __logo">
-          <img src="{% static 'main/images/logo.svg' %}" alt="logo">
-        </div>
-        <div class="header__text __text">
-          <span>Чарнцев Егор, 11-201</span>
-        </div>
+        <a href="#" class="header__link">Журнал посещаемости</a>
+        <a href=index class="header__link header__selected">Доска объявлений</a>
+        <a href=timetable class="header__link">Расписание</a>
+        <a href=materials class="header__link">Учебные материалы</a>
+        <a href=contacts class="header__link">Контакты</a>
+        <a href=profile class="header__link">Профиль</a>
       </div>
     </header>
     <main>
-      <div class="main__container __container">
-        <div class="buttons">
-          <a href="schedule.html" class="button__link"><div class="button">Расписание</div></a>
-          <a href="index.html" class="button__link"><div class="button active">Доска объявления</div></a>
-          <a href="#" class="button__link"><div class="button">Журнал посещаемости</div></a>
-          <a href="#" class="button__link"><div class="button">Учебные материалы</div></a>
-          <a href="#" class="button__link"><div class="button">Контакты преподователей</div></a>
-        </div>
-        {% block content %}{% endblock %}
-      </div>
+      {% block content %}
+      {% endblock content%}
     </main>
   </div>
+  <script src="{% static 'main/js/header.js' %}"></script>
+  <script src="{% static 'main/js/modal.js' %}"></script>
 </body>
 </html>

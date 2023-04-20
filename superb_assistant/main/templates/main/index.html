@@ -1,2 +1,32 @@
-{% extends 'main/posts.html' %}
+{% extends 'main/base.html' %}
 
+{% block title %}Объявления{% endblock title %}
+
+{% block content %}
+     <div class="main__container __container">
+        <div class="noticeboard">
+            <a href="#" class="noticeboard__add">ДОБАВИТЬ НОВОЕ ОБЪЯВЛЕНИЕ</a>
+            {% for elem in posts %}
+            <div class="noticeboard__infoblock" id="block1">
+              <div class="noticeboard__infoblock-header">
+                <div class="noticeboard__infoblock-title">
+                  {{ elem.title }}
+                </div>
+                <div class="noticeboard__infoblock-date">
+                  {{ elem.time }}
+                </div>
+              </div>
+              <div class="noticeboard__infoblock-text">{{ elem.text }}</div>
+              <div class="noticeboard__infoblock-buttons">
+                <a href="#"
+                   class="noticeboard__infoblock-button edit">ИЗМЕНИТЬ</a>
+                <a href="#"
+                   class="noticeboard__infoblock-button delete">УДАЛИТЬ</a>
+              </div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+      </div>
+{% endblock content%}

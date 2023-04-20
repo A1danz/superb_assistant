@@ -94,7 +94,6 @@ class AttendanceLog(models.Model):
     lesson = models.CharField(max_length=100)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
-
     def __str__(self):
         return f'{self.date}: {self.lesson}'
 
