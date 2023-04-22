@@ -31,6 +31,7 @@ class Student(models.Model):
     ]
     permission = models.SmallIntegerField(choices=PERMISSION, default=SIMPLE_STUDENT)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    #null = True, blank = True
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -68,6 +69,7 @@ class Lesson(models.Model):
     end_time = models.TimeField()
     name = models.CharField(max_length=50, blank=True)
     schedule = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room_num = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return f'{self.day}: {self.name}'

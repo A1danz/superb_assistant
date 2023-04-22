@@ -13,17 +13,14 @@ def signin(request):
 
 def signup(request):
     if request.method == 'POST':
-        print(request.POST)
-        #это я выводила чтобы понять, считывается ли вообще что-то
-        #спойлер - почему-то не считывается
         user_form = UserCreationForm(request.POST)
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
-            new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
-            return HttpResponse("Created")
-        else:
             return profile(request)
+        else:
+            return render(request, "main/signup.html") #??
+            #надо наверно добавить как-то, чтобы показывалось почему введенные данные некорректные
     else:
         return render(request, "main/signup.html")
 
@@ -73,13 +70,17 @@ def timetable(request):
 
 
 def profile(request):
+    if request.method == 'POST':
+        request.user.firstname = request.POST['firstname']
+        request.user.lastname = request.POST['lastname']
+        student = Student.objects.create(user=request.user)
+        student.save()
+        return HttpResponse("created user")
     students = Student.objects.all()
-
     contex = {
         'students': students,
         'navbar': 'profile'
     }
-
     return render(request, "main/profile.html", context=contex)
 
 

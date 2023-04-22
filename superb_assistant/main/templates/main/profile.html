@@ -14,10 +14,11 @@
               <h4 class="profile__title">
                 ОСНОВНОЕ
               </h4>
-              <form class="profile__form" action="">
-
-                <input type="text" class="profile__input input" placeholder="имя пользователя" value="Сафин Ильдан">
-                <input type="email" class="profile__input input" placeholder="электронная почта" value="lldan@gmail.com">
+              <form class="profile__form" action="" method="post">
+                {% csrf_token %}
+                <input type="text" class="profile__input input" name="lastname" placeholder="фамилия">
+                <input type="text" class="profile__input input" name="firstname" placeholder="имя">
+                <input type="email" class="profile__input input" placeholder="электронная почта">
                 <input type="submit" class="btn" value="СОХРАНИТЬ">
               </form>
             </div>

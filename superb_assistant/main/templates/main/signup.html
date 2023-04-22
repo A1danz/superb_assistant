@@ -20,19 +20,23 @@
           <a href=signup class="sign__link-up signup__link-up">РЕГИСТРАЦИЯ</a>
           <div class="sign__decor signup__decor"></div>
         </div>
-        <form class="sign__form" method = 'post'>
+        <form class="sign__form" action="/signup/" method = "post">
           {% csrf_token %}
-          <input type="text" class="input" placeholder="имя пользователя">
+
+          <label name="username">
+            <input type="text" class="input" name="username" placeholder="имя пользователя">
+          </label>
           <!--<input type="email" class="input" placeholder="электронная почта">-->
           <label class="password1">
-            <input type="password" class="input password" placeholder="пароль" required>
+            <input type="password" class="input password" name="password1" placeholder="пароль">
             <i class="sign__eye uil uil-eye"></i>
           </label>
           <label class="password2">
-            <input type="password" class="input password" placeholder="подтвердите пароль" required>
+            <input type="password" class="input password" name="password2" placeholder="подтвердите пароль">
             <i class="sign__eye uil uil-eye"></i>
           </label>
-          <input type="submit" class="btn" value="ЗАРЕГИСТРИРОВАТЬСЯ">
+
+          <input type="submit" class="btn btn-primary" value="ЗАРЕГИСТРИРОВАТЬСЯ">
         </form>
       </div>
     </div>
