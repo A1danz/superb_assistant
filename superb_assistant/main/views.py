@@ -1,10 +1,14 @@
 from django.shortcuts import render
-from .models import Post, AttendanceLog, Contact, StudyMaterial, Student
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+
+from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponse
 
+
 def signin(request):
-    return render(request, "main/signin.html")
+    return (request, "main/signin.html")
 
 
 def signup(request):
@@ -58,7 +62,7 @@ def materials(request):
 
 
 def timetable(request):
-    list = AttendanceLog.objects.all()
+    list = Lesson.objects.all()
 
     contex = {
         'list': list,
@@ -77,3 +81,9 @@ def profile(request):
     }
 
     return render(request, "main/profile.html", context=contex)
+
+
+# class RegisterUser(CreateView):
+#     form_class = UserCreationForm
+#     template_name = "main/signup.html"
+#     success_url = reverse_lazy('signin')

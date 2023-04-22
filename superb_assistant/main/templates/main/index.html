@@ -1,9 +1,10 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}Объявления{% endblock title %}
 
 {% block content %}
-     <div class="main__container __container">
+    <div class="main__container __container">
         <div class="noticeboard">
             <a href="#" class="noticeboard__add">ДОБАВИТЬ НОВОЕ ОБЪЯВЛЕНИЕ</a>
             {% for elem in posts %}
