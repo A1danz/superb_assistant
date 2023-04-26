@@ -5,15 +5,20 @@ import string
 from django.contrib.auth.models import User
 from django.db import models
 
+
+
+
 # генерируем случайную строку
 def rand():
     return ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(10))
 
 
 class Room(models.Model):
-    code = models.CharField(max_length=10, unique=True, default=rand)
+    code = models.CharField(max_length=10, default=rand, primary_key=True)
     name = models.CharField(max_length=10, unique=True)
 
+    def __unicode__(self):
+        return self.pk
     def __str__(self):
         return self.name
 
@@ -31,7 +36,6 @@ class Student(models.Model):
     ]
     permission = models.SmallIntegerField(choices=PERMISSION, default=SIMPLE_STUDENT)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    #null = True, blank = True
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):

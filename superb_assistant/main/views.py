@@ -1,25 +1,37 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson
+from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponse
 
 
 def signin(request):
-    return (request, "main/signin.html")
+    return render(request, "main/signin.html")
 
 
 def signup(request):
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
+        print(user_form.errors)
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
+            new_user.first_name=request.POST['name']
+            new_user.last_name=request.POST['surname']
             new_user.save()
-            return profile(request)
+            if request.POST['role'] == 'warden':
+                return HttpResponse("You have to wait")
+            else:
+                room = Room.objects.get(pk=request.POST['roomnum'])
+                #student = Student.objects.create(room=Room.objects.get(pk=request.POST['roomnum']), user=new_user)
+                student = Student.objects.create(room=room, user=new_user)
+                student.save()
+                return redirect(profile)
         else:
-            return render(request, "main/signup.html") #??
+            return HttpResponse("no")
+                #render(request, "main/signup.html") #??
             #надо наверно добавить как-то, чтобы показывалось почему введенные данные некорректные
     else:
         return render(request, "main/signup.html")
@@ -68,20 +80,21 @@ def timetable(request):
 
     return render(request, "main/timetable.html", context=contex)
 
-
+@login_required
 def profile(request):
     if request.method == 'POST':
-        request.user.firstname = request.POST['firstname']
-        request.user.lastname = request.POST['lastname']
+        request.user.firstname = request.POST['name']
+        request.user.lastname = request.POST['surname']
         student = Student.objects.create(user=request.user)
         student.save()
         return HttpResponse("created user")
-    students = Student.objects.all()
-    contex = {
-        'students': students,
-        'navbar': 'profile'
-    }
-    return render(request, "main/profile.html", context=contex)
+    else:
+        students = Student.objects.all()
+        contex = {
+            'students': students,
+            'navbar': 'profile'
+        }
+        return render(request, "main/profile.html", context=contex)
 
 
 # class RegisterUser(CreateView):

@@ -51,3 +51,13 @@ eye.addEventListener('click', () => {
     eye.classList.add('uil-eye');
   }
 })
+
+document.querySelectorAll('.sign__radio').forEach(el => {
+  el.addEventListener('click', (e) => {
+    if (e.target.value === 'student') {
+      document.querySelector('.input__code').style.display = 'block';
+    } else {
+      document.querySelector('.input__code').style.display = 'none';
+    }
+  })
+})

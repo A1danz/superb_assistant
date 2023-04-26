@@ -9,34 +9,44 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-    <title>Superb Assistant</title>
+    <link rel="icon" href="favicon.ico">
+    <title>Регистрация</title>
   </head>
   <body>
     <div class="sign">
       <div class="sign__wrapper">
         <h3 class="sign__title">привет</h3>
         <div class="sign__nav">
-          <a href=signin class="sign__link-in signup__link-in">ВОЙТИ</a>
-          <a href=signup class="sign__link-up signup__link-up">РЕГИСТРАЦИЯ</a>
+          <a href=../signin class="sign__link-in signup__link-in">ВОЙТИ</a>
+          <a href=../signup class="sign__link-up signup__link-up">РЕГИСТРАЦИЯ</a>
           <div class="sign__decor signup__decor"></div>
         </div>
-        <form class="sign__form" action="/signup/" method = "post">
+        <form class="sign__form" method="post">
           {% csrf_token %}
-
-          <label name="username">
-            <input type="text" class="input" name="username" placeholder="имя пользователя">
-          </label>
-          <!--<input type="email" class="input" placeholder="электронная почта">-->
-          <label class="password1">
+          <input type="text" class="input" name="username" placeholder="имя пользователя">
+          <input type="text" class="input" name="name" placeholder="имя">
+          <input type="text" class="input" name="surname" placeholder="фамилия">
+          <label class="password__label" name="password1">
             <input type="password" class="input password" name="password1" placeholder="пароль">
             <i class="sign__eye uil uil-eye"></i>
           </label>
-          <label class="password2">
+          <label class="password__label" name="password2">
             <input type="password" class="input password" name="password2" placeholder="подтвердите пароль">
             <i class="sign__eye uil uil-eye"></i>
           </label>
-
-          <input type="submit" class="btn btn-primary" value="ЗАРЕГИСТРИРОВАТЬСЯ">
+          <div class="sign__label">
+            <input class="sign__radio" type="radio" name="role" value="student" checked
+                   id="role1">
+            <label for="role1" class="sign__box">
+              я студент
+            </label>
+            <input class="sign__radio" type="radio" name="role" value="warden" id="role2">
+            <label for="role2" class="sign__box">
+              я староста
+            </label>
+          </div>
+          <input type="text" class="input input__code" name="roomnum" placeholder="код группы" >
+          <input type="submit" class="btn modal__btn" value="ЗАРЕГИСТРИРОВАТЬСЯ">
         </form>
       </div>
     </div>
