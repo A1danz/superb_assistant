@@ -14,7 +14,15 @@
   <body>
     <div class="sign">
       <div class="sign__wrapper">
-        <h3 class="sign__title">привет</h3>
+        {% if form.errors %}
+        <h3 class="sign__title">Форма заполнена неверно. Проверьте ее правильность.</h3>
+        {% else %}
+        {% if error %}
+        <h3 class="sign__title">{{ error }}</h3>
+        {% else %}
+        <h3 class="sign__title">Пожалуйста, введите логин и пароль</h3>
+        {% endif %}
+        {% endif %}
         <div class="sign__nav">
           <a href="../signin" class="sign__link-in">ВОЙТИ</a>
           <a href="../signup/" class="sign__link-up">РЕГИСТРАЦИЯ</a>
@@ -22,7 +30,11 @@
         </div>
         <form class="sign__form" method="post">
           {% csrf_token %}
+          {% if form.username.errors %}
+          <input type="text" class="input" name="username" placeholder="имя пользователя" value={{ form.username }}>
+          {% else %}
           <input type="text" class="input" name="username" placeholder="имя пользователя">
+          {% endif %}
           <label class="password__label">
             <input type="password" class="input password" name="password" placeholder="пароль">
             <i class="sign__eye uil uil-eye"></i>

@@ -1,37 +1,44 @@
 from django.contrib.auth.decorators import login_required
+from django.forms.utils import ErrorDict
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import HttpResponse
+from .forms import Loginform
 
 
 def signin(request):
     uservalue = ''
     passwordvalue = ''
-    form = AuthenticationForm(request.POST)
+
+    form = Loginform(request.POST or None)
     if form.is_valid():
         uservalue = form.cleaned_data.get("username")
         passwordvalue = form.cleaned_data.get("password")
 
         user = authenticate(username=uservalue, password=passwordvalue)
         if user is not None:
-            print("Login")
             login(request, user)
             return render(request, 'main/profile.html')
         else:
-            print("Not login")
             context = {'form': form,
-                       'error': 'The username and password combination is incorrect'}
-
+                       'error': 'Логин и пароль неверны'}
             return render(request, 'main/signin.html', context)
 
     else:
+        print("Form is invalid")
+        json_data = form.get_json_data()
         context = {'form': form}
-        print("Form isn't valid")
+        context['username_error'] = ''
+        context['password_error'] = ''
+        if (json_data['username']):
+            context['username_error'] = json_data['username'][0]['message']
+        if (json_data['password']):
+            context['password_error'] = json_data['password'][0]['message']
         return render(request, 'main/signin.html', context)
 
 
