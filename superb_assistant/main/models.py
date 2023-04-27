@@ -8,6 +8,7 @@ from django.db import models
 
 
 
+
 # генерируем случайную строку
 def rand():
     return ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(10))
@@ -15,10 +16,11 @@ def rand():
 
 class Room(models.Model):
     code = models.CharField(max_length=10, default=rand, primary_key=True)
-    name = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=10)
 
     def __unicode__(self):
         return self.pk
+
     def __str__(self):
         return self.name
 

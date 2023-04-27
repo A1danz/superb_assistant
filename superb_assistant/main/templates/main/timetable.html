@@ -1,11 +1,6 @@
 {% extends 'main/base.html' %}
-{% load static %}
 
 {% block title %}Расписание{% endblock title %}
-
-{% block style %}
-    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
-{% endblock style %}
 
 {% block content %}
     <div class="container">
@@ -25,8 +20,7 @@
               {{ elem.name }}
             </p>
             <p class="timetable__text">
-<!--              TODO убрать или добавить в бд-->
-              1304
+              {{ elem.room_num }}
             </p>
           </div>
 

@@ -1,28 +1,17 @@
 {% extends 'main/base.html' %}
-{% load static %}
 
 {% block title %}Контакты{% endblock title %}
-
-{% block style %}
-    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-    />
-{% endblock style %}
 
 {% block content %}
 <div class="container">
           <div class="contact__container">
-            {% for elem in contacts %}
             <button class="btn btn-modal">ДОБАВИТЬ НОВЫЙ КОНТАКТ</button>
+              {% for elem in contacts %}
             <div class="contact__cell">
               <div class="contact__title">{{ elem.teacher }}</div>
               <div class="contact__info">
                 <div class="contact__text">{{ elem.lesson }}</div>
-<!--                TODO храним сразу все контакты-->
-                <div class="contact__text"><span class="contact__phone">{{ elem.contact }}</span>, <span
-                    class="contact__messenger">@lldan</span>
+                <div class="contact__text contact__randomname">{{ elem.contact }}
                 </div>
               </div>
               <div class="contact__btns">

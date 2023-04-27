@@ -1,11 +1,6 @@
 {% extends 'main/base.html' %}
-{% load static %}
 
 {% block title %}Профиль{% endblock title %}
-
-{% block style %}
-    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
-{% endblock style %}
 
 {% block content %}
 <div class="container">
@@ -14,11 +9,12 @@
               <h4 class="profile__title">
                 ОСНОВНОЕ
               </h4>
-              <form class="profile__form" action="" method="post">
+              <form class="profile__form" action="">
                 {% csrf_token %}
-                <input type="text" class="profile__input input" name="lastname" placeholder="фамилия">
-                <input type="text" class="profile__input input" name="firstname" placeholder="имя">
-                <input type="email" class="profile__input input" placeholder="электронная почта">
+                <input type="text" class="profile__input input" placeholder="имя пользователя" value="Сафин Ильдан">
+                <input type="email" class="profile__input input" placeholder="электронная почта"
+                       value="lldan@gmail.com">
+                <input type="text" class="profile__input input" placeholder="ваша группа" value="11-201">
                 <input type="submit" class="btn" value="СОХРАНИТЬ">
               </form>
             </div>
@@ -52,7 +48,7 @@
               <div class="profile__group">
                 <p class="profile__group-text">Ваша группа: <strong>11-201</strong></p>
                 <p class="profile__group-text">Ваша роль: <strong>староста</strong></p>
-                <p class="profile__group-text">Староста: <strong>Чарнцев Егор</strong></p>
+                <p class="profile__group-text">Код вашей группы: <strong>1234567891</strong></p>
               </div>
               <div class="profile__person">
                 <p class="profile__person-name">

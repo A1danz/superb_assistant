@@ -80,6 +80,27 @@ def timetable(request):
 
     return render(request, "main/timetable.html", context=contex)
 
+
+def log(request):
+    lessons = AttendanceLog.objects.all()
+
+    contex = {
+        'lessons': lessons,
+        'navbar': 'log'
+    }
+    return render(request, "main/log.html", context=contex)
+
+
+def lesson(request):
+    contex = {}
+    return render(request, "main/lesson.html", context=contex)
+
+
+def lesson_edit(request):
+    contex = {}
+    return render(request, "main/lesson_edit.html", context=contex)
+
+
 @login_required
 def profile(request):
     if request.method == 'POST':

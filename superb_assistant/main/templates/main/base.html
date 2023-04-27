@@ -8,16 +8,21 @@
   <meta http-equiv="X-UA-Compatible"
         content="ie=edge">
   <title> {% block title %}{% endblock title %} </title>
+  <link rel="icon" href="{% static 'main/css/favicon.ico' %}">
   <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-  {% block style %}{% endblock style %}
+  <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+  <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
 </head>
 <body>
 {% block modal %}{% endblock modal %}
   <div class="wrapper">
     <header>
       <div class="header__container __container">
-        <a href="#" class="header__link {% if navbar == '' %} header__selected {% endif %}">Журнал посещаемости</a>
+        <a href=log class="header__link {% if navbar == 'log' %} header__selected {% endif %}">Журнал посещаемости</a>
         <a href=index class="header__link {% if navbar == 'index' %} header__selected {% endif %}">Доска объявлений</a>
         <a href=timetable class="header__link {% if navbar == 'timatable' %} header__selected {% endif %}">Расписание</a>
         <a href=materials class="header__link {% if navbar == 'materials' %} header__selected {% endif %}">Учебные материалы</a>
