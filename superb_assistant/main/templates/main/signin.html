@@ -20,10 +20,11 @@
           <a href="../signup/" class="sign__link-up">РЕГИСТРАЦИЯ</a>
           <div class="sign__decor"></div>
         </div>
-        <form class="sign__form">
-          <input type="text" class="input" placeholder="имя пользователя">
+        <form class="sign__form" method="post">
+          {% csrf_token %}
+          <input type="text" class="input" name="username" placeholder="имя пользователя">
           <label class="password__label">
-            <input type="password" class="input password" placeholder="пароль">
+            <input type="password" class="input password" name="password" placeholder="пароль">
             <i class="sign__eye uil uil-eye"></i>
           </label>
           <input type="submit" class="btn modal__btn" value="ВХОД">
