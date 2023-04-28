@@ -12,37 +12,43 @@ from .forms import Loginform
 
 
 def signin(request):
-    uservalue = ''
-    passwordvalue = ''
+    if (request.user.is_authenticated):
+        return redirect(index)
+    if request.method == 'POST':
+        uservalue = ''
+        passwordvalue = ''
+        form = Loginform(request.POST or None)
+        if form.is_valid():
+            uservalue = form.cleaned_data.get("username")
+            passwordvalue = form.cleaned_data.get("password")
 
-    form = Loginform(request.POST or None)
-    if form.is_valid():
-        uservalue = form.cleaned_data.get("username")
-        passwordvalue = form.cleaned_data.get("password")
+            user = authenticate(username=uservalue, password=passwordvalue)
+            if user is not None:
+                login(request, user)
+                return render(request, 'main/profile.html')
+            else:
+                context = {'form': form,
+                           'error': 'Логин или пароль неверны'}
+                return render(request, 'main/signin.html', context)
 
-        user = authenticate(username=uservalue, password=passwordvalue)
-        if user is not None:
-            login(request, user)
-            return render(request, 'main/profile.html')
         else:
-            context = {'form': form,
-                       'error': 'Логин и пароль неверны'}
+            json_data = form.errors.get_json_data()
+            print(json_data)
+            context = {'form': form}
+            context['username_error'] = ''
+            context['password_error'] = ''
+            if ('username' in json_data):
+                context['username_error'] = json_data['username'][0]['message']
+            if ('password' in json_data):
+                context['password_error'] = json_data['password'][0]['message']
             return render(request, 'main/signin.html', context)
-
     else:
-        print("Form is invalid")
-        json_data = form.get_json_data()
-        context = {'form': form}
-        context['username_error'] = ''
-        context['password_error'] = ''
-        if (json_data['username']):
-            context['username_error'] = json_data['username'][0]['message']
-        if (json_data['password']):
-            context['password_error'] = json_data['password'][0]['message']
-        return render(request, 'main/signin.html', context)
+        return render(request, 'main/signin.html')
 
 
 def signup(request):
+    if (request.user.is_authenticated):
+        return redirect(index)
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
         print(user_form.errors)
@@ -67,8 +73,10 @@ def signup(request):
     else:
         return render(request, "main/signup.html")
 
-
+@login_required()
 def index(request):
+    if request.user.is_authenticated:
+        print(request.user.last_name)
     posts = Post.objects.all()
 
     contex = {
@@ -78,7 +86,7 @@ def index(request):
 
     return render(request, "main/index.html", context=contex)
 
-
+@login_required()
 def contacts(request):
     contacts = Contact.objects.all()
 
@@ -89,7 +97,7 @@ def contacts(request):
 
     return render(request, "main/contact.html", context=contex)
 
-
+@login_required()
 def materials(request):
     materials = StudyMaterial.objects.all()
 
@@ -100,7 +108,7 @@ def materials(request):
 
     return render(request, "main/train_material.html", context=contex)
 
-
+@login_required()
 def timetable(request):
     list = Lesson.objects.all()
 
@@ -111,7 +119,7 @@ def timetable(request):
 
     return render(request, "main/timetable.html", context=contex)
 
-
+@login_required()
 def log(request):
     lessons = AttendanceLog.objects.all()
 
@@ -122,19 +130,22 @@ def log(request):
     return render(request, "main/log.html", context=contex)
 
 
+@login_required()
 def lesson(request):
     contex = {}
     return render(request, "main/lesson.html", context=contex)
 
 
+@login_required()
 def lesson_edit(request):
     contex = {}
     return render(request, "main/lesson_edit.html", context=contex)
 
 
-@login_required
+@login_required()
 def profile(request):
     if request.method == 'POST':
+        print(request.POST)
         request.user.firstname = request.POST['name']
         request.user.lastname = request.POST['surname']
         student = Student.objects.create(user=request.user)
@@ -147,9 +158,3 @@ def profile(request):
             'navbar': 'profile'
         }
         return render(request, "main/profile.html", context=contex)
-
-
-# class RegisterUser(CreateView):
-#     form_class = UserCreationForm
-#     template_name = "main/signup.html"
-#     success_url = reverse_lazy('signin')
