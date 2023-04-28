@@ -30,13 +30,9 @@
         </div>
         <form class="sign__form" method="post">
           {% csrf_token %}
-          {% if form.username.errors %}
-          <input type="text" class="input" name="username" placeholder="имя пользователя" value={{ form.username }}>
-          {% else %}
-          <input type="text" class="input" name="username" placeholder="имя пользователя">
-          {% endif %}
+          <input type="text" class="input" name="username" placeholder="имя пользователя" value="{{ username_error }}">
           <label class="password__label">
-            <input type="password" class="input password" name="password" placeholder="пароль">
+            <input type="password" class="input password" name="password" placeholder="пароль" value="{{ password_error }}">
             <i class="sign__eye uil uil-eye"></i>
           </label>
           <input type="submit" class="btn modal__btn" value="ВХОД">
