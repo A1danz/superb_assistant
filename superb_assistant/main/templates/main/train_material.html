@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}Учебные материалы{% endblock title %}
 
@@ -27,22 +28,23 @@
 {% endblock content %}
 
 {% block modal %}
-    <div class="modal">
-      <div class="modal__overlay animate__animated animate__fadeIn">
-        <div class="modal__content animate__animated animate__backInDown ">
-          <h4 class="modal__title">
-            НОВЫЙ МАТЕРИАЛ
-          </h4>
-          <form class="modal__form" action="">
+    <div class="modal__overlay animate__animated animate__fadeIn">
+    <div class="modal__content animate__animated animate__backInDown ">
+      <h4 class="modal__title">
+        НОВЫЙ МАТЕРИАЛ
+      </h4>
+      <form class="modal__form" action="">
 
-            <input type="text" class="modal__input modal__input-name input" placeholder="название материала">
-            <input type="text" class="modal__input modal__input-link input" placeholder="ссылка на материал">
-            <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
-          </form>
-          <i class="modal__icon uil uil-times"></i>
-        </div>
-      </div>
+        <input type="text" class="modal__input modal__input-name input" placeholder="название материала">
+        <input type="text" class="modal__input modal__input-link input" placeholder="ссылка на материал">
+        <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
+      </form>
+      <i class="modal__icon uil uil-times"></i>
+    </div>
     </div>
 {% endblock modal %}
 
 
+{% block js %}
+    <script src="{% static 'main/js/train.js' %}"></script>
+{% endblock js %}

@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}Контакты{% endblock title %}
 
@@ -29,7 +30,6 @@
 
 
 {% block modal %}
-    <div class="modal">
       <div class="modal__overlay animate__animated animate__fadeIn">
         <div class="modal__content animate__animated animate__backInDown ">
           <h4 class="modal__title">
@@ -38,12 +38,14 @@
           <form class="modal__form" action="">
             <input type="text" class="modal__input modal__input-name input" placeholder="имя преподавателя">
             <input type="text" class="modal__input modal__lesson input" placeholder="предмет">
-            <input type="text" class="modal__input modal__phone input" placeholder="номер телефона">
-            <input type="text" class="modal__input modal__messenger input" placeholder="телеграм">
+            <input type="text" class="modal__input modal__contact input" placeholder="контакт">
             <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
           </form>
           <i class="modal__icon uil uil-times"></i>
         </div>
       </div>
-    </div>
 {% endblock modal %}
+
+{% block js %}
+<script src="{% static 'main/js/contact.js' %}"></script>
+{% endblock js %}

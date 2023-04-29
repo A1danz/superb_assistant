@@ -1,11 +1,8 @@
 from django.urls import path
 
 from . import views
-from django.contrib.auth import views as authViews
-# from .views import RegisterUser
 
 urlpatterns = [
-    # path('signin', RegisterUser.as_view(), name='signin'),
     path('', views.index, name='index'),
     path('signin', views.signin, name='signin'),
     path('signup/', views.signup, name='signup'),

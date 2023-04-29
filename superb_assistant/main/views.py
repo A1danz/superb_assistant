@@ -50,8 +50,8 @@ def signup(request):
         user_form = UserCreationForm(request.POST)
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
-            new_user.first_name=request.POST['name']
-            new_user.last_name=request.POST['surname']
+            new_user.first_name = request.POST['name']
+            new_user.last_name = request.POST['surname']
             if request.POST['role'] == 'warden':
                 new_user.save()
                 return HttpResponse("You have to wait")
@@ -65,15 +65,17 @@ def signup(request):
             json_data = user_form.errors.get_json_data()
             list = request.POST
             context = {'form': user_form}
-            if list['username']=='' or list['password1']==''or list['password2'] =='':
-                context['errors']= "Заполните все поля"
+            if list['username'] == '' or list['password1'] == '' or list['password2'] == '':
+                context['errors'] = "Заполните все поля"
             elif 'username' in json_data:
-                context['errors']='Пользователь с таким именем уже существует'
+                context['errors'] = 'Пользователь с таким именем уже существует'
             elif 'password1' in json_data or 'password2' in json_data:
-                context['errors']='Введите корректные, совпадающие пароли! (сложный пароль, не похожий на логин, состоящий из букв, цифр и специальных символов, длиной не менее 8)'
+                context[
+                    'errors'] = 'Введите корректные, совпадающие пароли! (сложный пароль, не похожий на логин, состоящий из букв, цифр и специальных символов, длиной не менее 8)'
             return render(request, "main/signup.html", context)
     else:
         return render(request, 'main/signup.html')
+
 
 @login_required()
 def index(request):
@@ -88,6 +90,7 @@ def index(request):
 
     return render(request, "main/index.html", context=contex)
 
+
 @login_required()
 def contacts(request):
     contacts = Contact.objects.all()
@@ -98,6 +101,7 @@ def contacts(request):
     }
 
     return render(request, "main/contact.html", context=contex)
+
 
 @login_required()
 def materials(request):
@@ -110,6 +114,7 @@ def materials(request):
 
     return render(request, "main/train_material.html", context=contex)
 
+
 @login_required()
 def timetable(request):
     list = Lesson.objects.all()
@@ -120,6 +125,7 @@ def timetable(request):
     }
 
     return render(request, "main/timetable.html", context=contex)
+
 
 @login_required()
 def log(request):
