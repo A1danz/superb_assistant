@@ -164,9 +164,23 @@ def profile(request):
         student.save()
         return HttpResponse("created user")
     else:
-        students = Student.objects.all()
+        cur_student = Student.objects.get(user=request.user)
+
+        STATUS = {
+            0: 'студент',
+            1: 'заместитель старосты',
+            2: 'староста'
+        }
+
+
+        group = Student.objects.filter(room=cur_student.room)
+
         contex = {
-            'students': students,
-            'navbar': 'profile'
+            'navbar': 'profile',
+            'cur_student': cur_student,
+            'perm': cur_student.permission,
+            'status': STATUS.get(cur_student.permission),
+            'group': group,
+            'STATUS': STATUS
         }
         return render(request, "main/profile.html", context=contex)

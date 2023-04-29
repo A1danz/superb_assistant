@@ -34,7 +34,6 @@ class Student(models.Model):
         (SIMPLE_STUDENT, 'Обычный студент'),
         (STUDENT_WITH_CAPABILITIES, 'Студент с дополнительными возможностями'),
         (HEADMAN, 'Староста')
-
     ]
     permission = models.SmallIntegerField(choices=PERMISSION, default=SIMPLE_STUDENT)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)

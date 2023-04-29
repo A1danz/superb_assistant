@@ -3,117 +3,92 @@
 
 {% block title %}Профиль{% endblock title %}
 
-
 {% block content %}
-<div class="container">
-  <div class="profile__container">
-    <div class="profile__box">
-      <h4 class="profile__title">
-        ОСНОВНОЕ
-      </h4>
-      <form class="profile__form" action="" method="post">
-        {% csrf_token %}
-        <input type="text" class="profile__input input" name="lastname" placeholder="фамилия" value="{{ user.last_name }}">
-        <input type="text" class="profile__input input" name="firstname" placeholder="имя" value="{{ user.first_name }}">
-        <input type="email" class="profile__input input" placeholder="электронная почта" value="{{ user.email }}">
-        <input type="text" class="profile__input input" placeholder="группа" value="11-201">
-        <input type="submit" class="btn" name = 'save' value="СОХРАНИТЬ">
-        <form method="post">
-          <input type="submit" class="btn" name = 'exit' value="ВЫЙТИ" >
+  <div class="container">
+    <div class="profile__container">
+      <div class="profile__box">
+        <h4 class="profile__title">
+          ОСНОВНОЕ
+        </h4>
+        <form class="profile__form" action="" method="post">
+          {% csrf_token %}
+          <input type="text" class="profile__input input" name="lastname" placeholder="фамилия" value="{{ user.last_name }}">
+          <input type="text" class="profile__input input" name="firstname" placeholder="имя" value="{{ user.first_name }}">
+          <input type="email" class="profile__input input" placeholder="электронная почта" value="{{ user.email }}">
+          <input type="text" class="profile__input input" placeholder="группа" value="11-201">
+          <input type="submit" class="btn" name = 'save' value="СОХРАНИТЬ">
+          <form method="post">
+            <input type="submit" class="btn" name = 'exit' value="ВЫЙТИ" >
+          </form>
         </form>
-      </form>
-    </div>
-    <div class="profile__box">
-      <h4 class="profile__title">
-        ПАРОЛЬ
-      </h4>
-      <form class="profile__form" action="">
-        <div class="profile__new-password">
+      </div>
+      <div class="profile__box">
+        <h4 class="profile__title">
+          ПАРОЛЬ
+        </h4>
+        <form class="profile__form" action="">
+          <div class="profile__new-password">
 
+            <label class="password__label">
+              <input type="password" class="input password profile__password" placeholder="новый пароль">
+              <i class="sign__eye uil uil-eye"></i>
+            </label>
+            <label class="password__label">
+              <input type="password" class="input password profile__password" placeholder="подтверждение нового пароля">
+              <i class="sign__eye uil uil-eye"></i>
+            </label>
+          </div>
           <label class="password__label">
-            <input type="password" class="input password profile__password" placeholder="новый пароль">
+            <input type="password" class="input password profile__input" placeholder="текущий пароль">
             <i class="sign__eye uil uil-eye"></i>
           </label>
-          <label class="password__label">
-            <input type="password" class="input password profile__password" placeholder="подтверждение нового пароля">
-            <i class="sign__eye uil uil-eye"></i>
-          </label>
-        </div>
-        <label class="password__label">
-          <input type="password" class="input password profile__input" placeholder="текущий пароль">
-          <i class="sign__eye uil uil-eye"></i>
-        </label>
-        <input type="submit" class="btn" value="ОБНОВИТЬ ПАРОЛЬ">
-      </form>
-    </div>
-    <div class="profile__box">
-      <h4 class="profile__title">
-        ГРУППА
-      </h4>
-      <div class="profile__group">
-        <p class="profile__group-text">Ваша группа: <strong>11-201</strong></p>
-        <p class="profile__group-text">Ваша роль: <strong>староста</strong></p>
-        <p class="profile__group-text">Код вашей группы: <strong>1234567891</strong></p>
+          <input type="submit" class="btn" value="ОБНОВИТЬ ПАРОЛЬ">
+        </form>
       </div>
-      <div class="profile__person">
-        <p class="profile__person-name">
-          Гималетдинова Айсылу
-        </p>
-        <p class="profile__person-status">
-          заместитель старосты
-        </p>
-        <div class="profile__person-btn">
-          удалить роль
+      <div class="profile__box">
+        <h4 class="profile__title">
+          ГРУППА
+        </h4>
+        <div class="profile__group">
+          <p class="profile__group-text">Ваша группа: <strong>{{ cur_student.room }}</strong></p>
+          <p class="profile__group-text">Ваша роль: <strong>{{ status }}</strong></p>
+          {% if perm == 2 %}
+            <p class="profile__group-text">Код вашей группы: <strong>{{ cur_student.room.code }}</strong></p>
+          {% endif %}
         </div>
-      </div>
-      <div class="profile__person">
-        <p class="profile__person-name">
-          Гималетдинова Айсылу
-        </p>
-        <p class="profile__person-status">
-          староста
-        </p>
-        <div class="profile__person-btn profile__person-btn--disabled">
-          нельзя удалить роль
-        </div>
-      </div>
-      <div class="profile__person">
-        <p class="profile__person-name">
-          Гималетдинова Айсылу
-        </p>
-        <p class="profile__person-status">
-          студент
-        </p>
-        <div class="profile__person-btn">
-          выдать роль
-        </div>
-      </div>
-      <div class="profile__person">
-        <p class="profile__person-name">
-          Гималетдинова Айсылу
-        </p>
-        <p class="profile__person-status">
-          заместитель старосты
-        </p>
-        <div class="profile__person-btn">
-          удалить роль
-        </div>
-      </div>
-      <div class="profile__person">
-        <p class="profile__person-name">
-          Гималетдинова Айсылу
-        </p>
-        <p class="profile__person-status">
-          заместитель старосты
-        </p>
-        <div class="profile__person-btn">
-          удалить роль
-        </div>
-      </div>
+        {% for student in group %}
+        <div class="profile__person">
+          <p class="profile__person-name">
+            {{ student.user.first_name }} {{ student.user.last_name }}
+          </p>
+          <p class="profile__person-status">
+            {{student.permission}}
+          </p>
+          {% if perm == 2 %}
 
+            {% if student.permission == 2 %}
+              <div class="profile__person-btn profile__person-btn--disabled">
+                нельзя удалить роль
+              </div>
+            {% endif %}
+
+            {% if student.permission == 1 %}
+              <div class="profile__person-btn">
+                удалить роль
+              </div>
+            {% endif %}
+
+            {% if student.permission == 0 %}
+              <div class="profile__person-btn">
+                выдать роль
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-</div>
 {% endblock content %}
 
 {% block js %}
