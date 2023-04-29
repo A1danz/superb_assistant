@@ -18,8 +18,10 @@
                 {% csrf_token %}
                 <input type="text" class="profile__input input" name="lastname" placeholder="фамилия" value="{{ user.last_name }}">
                 <input type="text" class="profile__input input" name="firstname" placeholder="имя" value="{{ user.first_name }}">
-                <input type="submit" class="btn" value="СОХРАНИТЬ">
-                <input type="submit" class="btn" value="ВЫЙТИ" >
+                <input type="submit" class="btn" name = 'save' value="СОХРАНИТЬ">
+                <form method="post">
+                  <input type="submit" class="btn" name = 'exit' value="ВЫЙТИ" >
+                </form>
               </form>
             </div>
             <div class="profile__box">
