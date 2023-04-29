@@ -1,12 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.forms.utils import ErrorDict
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
 from django.contrib.auth import authenticate, login, logout
 
 from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from .forms import Loginform
 
@@ -51,27 +48,32 @@ def signup(request):
         return redirect(index)
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
-        print(user_form.errors)
-        print(request.POST)
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
             new_user.first_name=request.POST['name']
             new_user.last_name=request.POST['surname']
-            new_user.save()
             if request.POST['role'] == 'warden':
+                new_user.save()
                 return HttpResponse("You have to wait")
             else:
                 room = Room.objects.get(pk=request.POST['roomnum'])
-                #student = Student.objects.create(room=Room.objects.get(pk=request.POST['roomnum']), user=new_user)
+                new_user.save()
                 student = Student.objects.create(room=room, user=new_user)
                 student.save()
                 return redirect(profile)
         else:
-            return HttpResponse("no")
-                #render(request, "main/signup.html") #??
-            #надо наверно добавить как-то, чтобы показывалось почему введенные данные некорректные
+            json_data = user_form.errors.get_json_data()
+            list = request.POST
+            context = {'form': user_form}
+            if list['username']=='' or list['password1']==''or list['password2'] =='':
+                context['errors']= "Заполните все поля"
+            elif 'username' in json_data:
+                context['errors']='Пользователь с таким именем уже существует'
+            elif 'password1' in json_data or 'password2' in json_data:
+                context['errors']='Введите корректные, совпадающие пароли! (сложный пароль, не похожий на логин, состоящий из букв, цифр и специальных символов, длиной не менее 8)'
+            return render(request, "main/signup.html", context)
     else:
-        return render(request, "main/signup.html")
+        return render(request, 'main/signup.html')
 
 @login_required()
 def index(request):
@@ -145,6 +147,10 @@ def lesson_edit(request):
 @login_required()
 def profile(request):
     if request.method == 'POST':
+        if request.POST.get('exit'):
+            request.session.clear()
+            logout(request)
+            return redirect(signup)
         print(request.POST)
         request.user.firstname = request.POST['name']
         request.user.lastname = request.POST['surname']
