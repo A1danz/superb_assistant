@@ -4,30 +4,54 @@
 {% block title %}Объявления{% endblock title %}
 
 {% block content %}
-    <div class="main__container __container">
-        <div class="noticeboard">
-            <a href="#" class="noticeboard__add">ДОБАВИТЬ НОВОЕ ОБЪЯВЛЕНИЕ</a>
+        <div class="container">
+          <div class="board__container">
+            <button class="btn btn-modal">ДОБАВИТЬ НОВОЕ ОБЪЯВЛЕНИЕ</button>
             {% for elem in posts %}
-            <div class="noticeboard__infoblock" id="block1">
-              <div class="noticeboard__infoblock-header">
-                <div class="noticeboard__infoblock-title">
+            <div class="board__cell">
+              <div class="board__box">
+                <h4 class="board__title">
                   {{ elem.title }}
-                </div>
-                <div class="noticeboard__infoblock-date">
+                </h4>
+                <p class="board__date">
                   {{ elem.time }}
-                </div>
+                </p>
               </div>
-              <div class="noticeboard__infoblock-text">{{ elem.text }}</div>
-              <div class="noticeboard__infoblock-buttons">
-                <a href="#"
-                   class="noticeboard__infoblock-button edit">ИЗМЕНИТЬ</a>
-                <a href="#"
-                   class="noticeboard__infoblock-button delete">УДАЛИТЬ</a>
+              <p class="board__text">
+                  {{ elem.text }}
+              </p>
+
+              <div class="board__btns">
+                <button class="mini-btn btn-change">ИЗМЕНИТЬ</button>
+                <button class="mini-btn btn-cancel">
+                  УДАЛИТЬ
+                </button>
               </div>
             </div>
             {% endfor %}
+          </div>
+        </div>
+{% endblock content%}
 
-
+{% block modal %}
+      <div class="modal__overlay animate__animated animate__fadeIn">
+        <div class="modal__content animate__animated animate__backInDown ">
+          <h4 class="modal__title">
+            НОВЫЙ МАТЕРИАЛ
+          </h4>
+          <form class="modal__form" action="">
+            <input type="text" class="modal__input modal__input-name input" placeholder="название материала">
+            <textarea class="modal__textarea input" placeholder="описание объявления"></textarea>
+            <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
+          </form>
+          <i class="modal__icon uil uil-times"></i>
         </div>
       </div>
-{% endblock content%}
+{% endblock modal %}
+
+{% block js %}
+<div class="notification">
+  текст скопирован в буфер обмена
+</div>
+<script src="{% static 'main/js/board.js' %}"></script>
+{% endblock js%}

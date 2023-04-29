@@ -1,24 +1,12 @@
-function notify(string) {
-  let notification = document.querySelector('.notification');
-  notification.textContent = string;
-  notification.style.transform = 'translateX(0)'
-  setTimeout(() => {
-    notification.style.transform = ''
-  }, 2000)
-}
-
-
 let $btn = document.querySelector('.btn-modal');
 let modal = document.querySelector('.modal');
 $btn.addEventListener('click', openModal);
 
 function openModal() {
-  document.querySelector('.modal__title').textContent = 'НОВЫЙ КОНТАКТ';
+  document.querySelector('.modal__title').textContent = 'НОВОЕ ОБЪЯВЛЕНИЕ';
   document.querySelector('.modal__btn').value = "ДОБАВИТЬ";
   document.querySelector('.modal__input-name').value = '';
-  document.querySelector('.modal__lesson').value = '';
-  document.querySelector('.modal__contact').value = '';
-
+  document.querySelector('.modal__textarea').value = '';
   modal.style.display = 'block';
   document.querySelector('body').style.overflowY = 'hidden';
   document.querySelector('.modal__btn').addEventListener('click', createCell);
@@ -26,31 +14,36 @@ function openModal() {
   function createCell(e) {
     e.preventDefault();
     let name = document.querySelector('.modal__input-name').value;
-    let lesson = document.querySelector('.modal__lesson').value;
-    let contact = document.querySelector('.modal__contact').value;
-    if (name && lesson && contact) {
-      notify('новый контакт добавлен');
+    let text = document.querySelector('.modal__textarea').value;
+    if (name && text) {
+      notify('объявление создано')
       let cell = document.createElement('div');
-      cell.classList.add("contact__cell");
-
+      cell.classList.add("board__cell");
+      let curDate = new Date();
       cell.innerHTML = `
-                <div class="contact__title">${name}</div>
-              <div class="contact__info">
-                <div class="contact__text">${lesson}</div>
-                <div class="contact__text contact__randomname">${contact}
-                </div>
+              <div class="board__box">
+                <h4 class="board__title">
+                  ${name}
+                </h4>
+                <p class="board__date">
+                ${curDate.getDay()}.${curDate.getMonth()}.${curDate.getFullYear()} ${curDate.getHours()}:${curDate.getMinutes()}
+                </p>
               </div>
-              <div class="contact__btns">
+              <p class="board__text">
+                ${text}
+              </p>
+              <div class="board__btns">
                 <button class="mini-btn btn-change">ИЗМЕНИТЬ</button>
-                <button class="mini-btn btn-cancel">УДАЛИТЬ</button>
+                <button class="mini-btn btn-cancel">
+                  УДАЛИТЬ
+                </button>
               </div>
       `
-      let information = cell.querySelectorAll('.contact__text')[1]
       cell.querySelector('.btn-change').addEventListener('click', openModalChange);
       cell.querySelector('.btn-cancel').addEventListener('click', deleteCell);
-      document.querySelector('.contact__container').append(cell);
+      document.querySelector('.board__container').append(cell);
     } else {
-      notify('нельзя создать пустой контакт')
+      notify('невозможно создать пустое объявление')
     }
 
     close();
@@ -72,13 +65,11 @@ btnChange.forEach((btn) => {
 })
 
 function openModalChange(e) {
-  let parent = e.target.closest('.contact__cell');
-  document.querySelector('.modal__title').textContent = 'ИЗМЕНИТЬ КОНТАКТ';
+  let parent = e.target.closest('.board__cell');
+  document.querySelector('.modal__title').textContent = 'ИЗМЕНИТЬ МАТЕРИАЛ';
   document.querySelector('.modal__btn').value = "ИЗМЕНИТЬ";
-  document.querySelector('.modal__input-name').value = parent.querySelector('.contact__title').textContent.trim();
-  document.querySelector('.modal__lesson').value = parent.querySelector('.contact__text').textContent.trim();
-  document.querySelector('.modal__contact').value = parent.querySelector('.contact__randomname').textContent.trim();
-
+  document.querySelector('.modal__input-name').value = parent.querySelector('.board__title').textContent.trim();
+  document.querySelector('.modal__textarea').value = parent.querySelector('.board__text').textContent.trim();
   modal.style.display = 'block';
   document.querySelector('body').style.overflowY = 'hidden';
 
@@ -87,18 +78,14 @@ function openModalChange(e) {
   function changeCell(e) {
     e.preventDefault();
     let name = document.querySelector('.modal__input-name').value;
-    let lesson = document.querySelector('.modal__lesson').value;
-    let contact = document.querySelector('.modal__contact').value;
-    if (name === '' || lesson === '' || contact === '') {
-      notify('контакт удален');
+    let text = document.querySelector('.modal__textarea').value;
+    if (name === '' || text === '') {
+      notify('объявление удалено');
       parent.remove();
     } else {
-      notify('контакт изменен');
-      parent.querySelector('.contact__title').textContent = name;
-      parent.querySelector('.contact__text').textContent = lesson;
-      let information = parent.querySelectorAll('.contact__text')[1];
-      information.innerHTML = `${contact}`
-
+      notify('объявление изменено');
+      parent.querySelector('.board__title').textContent = name;
+      parent.querySelector('.board__text').textContent = text;
     }
     close();
     document.querySelector('.modal__btn').removeEventListener('click', changeCell);
@@ -111,8 +98,8 @@ btnCancel.forEach((btn) => {
 })
 
 function deleteCell(e) {
-  notify('контакт удален');
-  let parent = e.target.closest('.contact__cell');
+  let parent = e.target.closest('.board__cell');
+  notify('объявление удалено');
   parent.remove();
 }
 
@@ -130,4 +117,14 @@ function close() {
     document.querySelector('.modal__overlay').classList.add('animate__fadeIn');
     document.querySelector('.modal__content').classList.add('animate__backInDown');
   }, 500);
+}
+
+
+function notify(string) {
+  let notification = document.querySelector('.notification');
+  notification.textContent = string;
+  notification.style.transform = 'translateX(0)'
+  setTimeout(() => {
+    notification.style.transform = ''
+  }, 2000)
 }
