@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.template.defaulttags import register
 
 from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm
@@ -119,9 +120,19 @@ def materials(request):
 def timetable(request):
     list = Lesson.objects.all()
 
+    DAY = {
+        1: 'Понедельник',
+        2: 'Вторник',
+        3: 'Среда',
+        4: 'Четверг',
+        5: 'Пятница',
+        6: 'Суббота'
+    }
+
     contex = {
         'list': list,
-        'navbar': 'timatable'
+        'navbar': 'timatable',
+        'DAY': DAY
     }
 
     return render(request, "main/timetable.html", context=contex)
@@ -179,8 +190,12 @@ def profile(request):
             'navbar': 'profile',
             'cur_student': cur_student,
             'perm': cur_student.permission,
-            'status': STATUS.get(cur_student.permission),
             'group': group,
             'STATUS': STATUS
         }
         return render(request, "main/profile.html", context=contex)
+
+
+@register.filter
+def get_item(dict, key):
+    return dict.get(key)

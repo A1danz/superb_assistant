@@ -9,12 +9,12 @@
       {% for elem in list %}
         <div class="timetable__column">
           <h3 class="timetable__title">
-            {{ elem.day }}
+            {{ DAY|get_item:elem.day }}
           </h3>
 
           <div class="timetable__cell">
             <p class="timetable__time">
-              {{ elem.start_time }} - {{ elem.end_time }}
+              {{ elem.start_time|time:"H:i" }} - {{ elem.end_time|time:"H:i" }}
             </p>
             <p class="timetable__text">
               {{ elem.name }}

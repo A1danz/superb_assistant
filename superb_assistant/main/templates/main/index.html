@@ -14,7 +14,7 @@
                   {{ elem.title }}
                 </h4>
                 <p class="board__date">
-                  {{ elem.time }}
+                  {{ elem.time|date:"d.m.y" }} {{ elem.time|time:"H:i" }}
                 </p>
               </div>
               <p class="board__text">

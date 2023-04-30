@@ -69,6 +69,7 @@ class Lesson(models.Model):
         (FRIDAY, 'Пятница'),
         (SATURDAY, 'Суббота')
     ]
+
     day = models.SmallIntegerField(choices=DAY)
     start_time = models.TimeField()
     end_time = models.TimeField()
