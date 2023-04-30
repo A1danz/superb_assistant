@@ -119,7 +119,7 @@ def materials(request):
 @login_required()
 def timetable(request):
     list = Lesson.objects.all()
-
+    cur_student = Student.objects.get(user=request.user)
     DAY = {
         1: 'Понедельник',
         2: 'Вторник',
@@ -190,6 +190,7 @@ def profile(request):
             'navbar': 'profile',
             'cur_student': cur_student,
             'perm': cur_student.permission,
+            'status': STATUS.get(cur_student.permission),
             'group': group,
             'STATUS': STATUS
         }

@@ -63,7 +63,7 @@ class Lesson(models.Model):
 
     DAY = [
         (MONDAY, 'Понедельник'),
-        (THURSDAY, 'Вторник'),
+        (TUESDAY, 'Вторник'),
         (WEDNESDAY, 'Среда'),
         (THURSDAY, 'Четверг'),
         (FRIDAY, 'Пятница'),

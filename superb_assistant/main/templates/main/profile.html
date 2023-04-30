@@ -51,7 +51,7 @@
         </h4>
         <div class="profile__group">
           <p class="profile__group-text">Ваша группа: <strong>{{ cur_student.room }}</strong></p>
-          <p class="profile__group-text">Ваша роль: <strong>{{ STATUS|get_item:perm }}</strong></p>
+          <p class="profile__group-text">Ваша роль: <strong>{{ status }}</strong></p>
           {% if perm == 2 %}
             <p class="profile__group-text">Код вашей группы: <strong>{{ cur_student.room.code }}</strong></p>
           {% endif %}
