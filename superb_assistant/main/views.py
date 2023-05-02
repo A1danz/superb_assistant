@@ -98,7 +98,8 @@ def index(request):
 
     contex = {
         'posts': posts,
-        'navbar': 'index'
+        'navbar': 'index',
+        'perm': get_perm(cur_student.permission)
     }
 
     return render(request, "main/index.html", context=contex)
@@ -106,11 +107,13 @@ def index(request):
 
 @login_required()
 def contacts(request):
-    contacts = Contact.objects.all()
+    cur_student = get_student(request)
+    contacts = Contact.objects.filter(room=cur_student.room)
 
     contex = {
         'contacts': contacts,
-        'navbar': 'contacts'
+        'navbar': 'contacts',
+        'perm': get_perm(cur_student.permission)
     }
 
     return render(request, "main/contact.html", context=contex)
@@ -118,11 +121,13 @@ def contacts(request):
 
 @login_required()
 def materials(request):
-    materials = StudyMaterial.objects.all()
+    cur_student = get_student(request)
+    materials = StudyMaterial.objects.filter(room=cur_student.room)
 
     contex = {
         'materials': materials,
-        'navbar': 'materials'
+        'navbar': 'materials',
+        'perm': get_perm(cur_student.permission)
     }
 
     return render(request, "main/train_material.html", context=contex)
@@ -130,8 +135,9 @@ def materials(request):
 
 @login_required()
 def timetable(request):
-    list = Lesson.objects.all()
-    cur_student = Student.objects.get(user=request.user)
+    cur_student = get_student(request)
+    list = Lesson.objects.filter(schedule=cur_student.room)
+
     DAY = {
         1: 'Понедельник',
         2: 'Вторник',
@@ -144,7 +150,8 @@ def timetable(request):
     contex = {
         'list': list,
         'navbar': 'timatable',
-        'DAY': DAY
+        'DAY': DAY,
+        'perm': get_perm(cur_student.permission)
     }
 
     return render(request, "main/timetable.html", context=contex)
@@ -152,9 +159,11 @@ def timetable(request):
 
 @login_required()
 def log(request):
-    lessons = AttendanceLog.objects.all()
+    cur_student = get_student(request)
+    lessons = AttendanceLog.objects.filter(room=cur_student.room)
 
     contex = {
+        'perm': get_perm(cur_student.permission),
         'lessons': lessons,
         'navbar': 'log'
     }
@@ -224,3 +233,9 @@ def download_material(request, video_id):
 
 def get_student(request):
     return Student.objects.get(user=request.user)
+
+
+def get_perm(permission):
+    if permission == 0:
+        return False
+    return True

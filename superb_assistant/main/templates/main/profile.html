@@ -15,7 +15,9 @@
           <input type="text" class="profile__input input" name="lastname" placeholder="фамилия" value="{{ user.last_name }}">
           <input type="text" class="profile__input input" name="firstname" placeholder="имя" value="{{ user.first_name }}">
           <input type="email" class="profile__input input" placeholder="электронная почта" value="{{ user.email }}">
+          {% if perm == 2 %}
           <input type="text" class="profile__input input" placeholder="группа" value="11-201">
+          {% endif %}
           <input type="submit" class="btn" name = 'save' value="СОХРАНИТЬ">
           <form method="post">
             <input type="submit" class="btn" name = 'exit' value="ВЫЙТИ" >

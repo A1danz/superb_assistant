@@ -6,7 +6,9 @@
 {% block content %}
         <div class="container">
           <div class="board__container">
+            {% if perm %}
             <button class="btn btn-modal">ДОБАВИТЬ НОВОЕ ОБЪЯВЛЕНИЕ</button>
+            {% endif %}
             {% for elem in posts %}
             <div class="board__cell">
               <div class="board__box">
@@ -20,13 +22,14 @@
               <p class="board__text">
                   {{ elem.text }}
               </p>
-
+              {% if perm %}
               <div class="board__btns">
                 <button class="mini-btn btn-change">ИЗМЕНИТЬ</button>
                 <button class="mini-btn btn-cancel">
                   УДАЛИТЬ
                 </button>
               </div>
+              {% endif %}
             </div>
             {% endfor %}
           </div>

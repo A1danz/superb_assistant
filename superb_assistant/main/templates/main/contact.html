@@ -6,7 +6,9 @@
 {% block content %}
 <div class="container">
           <div class="contact__container">
+              {% if perm %}
             <button class="btn btn-modal">ДОБАВИТЬ НОВЫЙ КОНТАКТ</button>
+              {% endif %}
               {% for elem in contacts %}
             <div class="contact__cell">
               <div class="contact__title">{{ elem.teacher }}</div>
@@ -15,10 +17,12 @@
                 <div class="contact__text contact__randomname">{{ elem.contact }}
                 </div>
               </div>
+                {% if perm %}
               <div class="contact__btns">
                 <button class="mini-btn btn-change">ИЗМЕНИТЬ</button>
                 <button class="mini-btn btn-cancel">УДАЛИТЬ</button>
               </div>
+                {% endif %}
             </div>
             {% endfor %}
           </div>

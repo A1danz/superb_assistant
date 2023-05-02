@@ -5,7 +5,9 @@
 {% block content %}
 <div class="container">
           <div class="log__container">
+              {% if perm %}
             <button class="btn btn-modal">ДОБАВИТЬ НОВЫЙ ПРЕДМЕТ</button>
+              {% endif %}
             <div class="log__box">
               <div class="log__title">
                 Список предметов
