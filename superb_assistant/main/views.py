@@ -2,15 +2,16 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.template.defaulttags import register
+from django.views.generic import ListView
 
 from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from .forms import Loginform
 
 
 def signin(request):
-    if (request.user.is_authenticated):
+    if request.user.is_authenticated:
         return redirect(index)
     if request.method == 'POST':
         uservalue = ''
@@ -45,7 +46,7 @@ def signin(request):
 
 
 def signup(request):
-    if (request.user.is_authenticated):
+    if request.user.is_authenticated:
         return redirect(index)
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
@@ -77,12 +78,23 @@ def signup(request):
     else:
         return render(request, 'main/signup.html')
 
+#
+# @login_required()
+# class ShowPost(ListView):
+#     model = Post
+#     template_name = 'main/index.html'
+#     context_object_name = 'posts'
+#     c = get_student(request)
+#     def get_queryset(self):
+#         return Post.objects.filter(room=cur_student.room)
+
 
 @login_required()
 def index(request):
     if request.user.is_authenticated:
         print(request.user.last_name)
-    posts = Post.objects.all()
+    cur_student = get_student(request)
+    posts = Post.objects.filter(room=cur_student.room)
 
     contex = {
         'posts': posts,
@@ -175,14 +187,13 @@ def profile(request):
         student.save()
         return HttpResponse("created user")
     else:
-        cur_student = Student.objects.get(user=request.user)
+        cur_student = get_student(request)
 
         STATUS = {
             0: 'студент',
             1: 'заместитель старосты',
             2: 'староста'
         }
-
 
         group = Student.objects.filter(room=cur_student.room)
 
@@ -200,3 +211,16 @@ def profile(request):
 @register.filter
 def get_item(dict, key):
     return dict.get(key)
+
+
+@login_required()
+def download_material(request, video_id):
+    # TODO: сделать верификацию пользователя
+    obj = StudyMaterial.objects.get(id=video_id)
+    filename = obj.file.path
+
+    return FileResponse(open(filename, 'rb'), as_attachment=True)
+
+
+def get_student(request):
+    return Student.objects.get(user=request.user)
