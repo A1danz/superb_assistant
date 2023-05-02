@@ -12,7 +12,7 @@ from .forms import Loginform
 
 def signin(request):
     if request.user.is_authenticated:
-        return redirect(index)
+        return redirect('index')
     if request.method == 'POST':
         uservalue = ''
         passwordvalue = ''
@@ -24,7 +24,8 @@ def signin(request):
             user = authenticate(username=uservalue, password=passwordvalue)
             if user is not None:
                 login(request, user)
-                return render(request, 'main/profile.html')
+                return redirect('profile')
+                #return render(request, 'main/profile.html')
             else:
                 context = {'form': form,
                            'error': 'Логин или пароль неверны'}
@@ -47,7 +48,7 @@ def signin(request):
 
 def signup(request):
     if request.user.is_authenticated:
-        return redirect(index)
+        return redirect('index')
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
         if user_form.is_valid():
@@ -62,7 +63,7 @@ def signup(request):
                 new_user.save()
                 student = Student.objects.create(room=room, user=new_user)
                 student.save()
-                return redirect(profile)
+                return redirect('profile')
         else:
             json_data = user_form.errors.get_json_data()
             list = request.POST
@@ -184,37 +185,44 @@ def lesson_edit(request):
 
 @login_required()
 def profile(request):
+    cur_student = get_student(request)
     if request.method == 'POST':
         if request.POST.get('exit'):
             request.session.clear()
             logout(request)
-            return redirect(signup)
-        print(request.POST)
-        request.user.firstname = request.POST['name']
-        request.user.lastname = request.POST['surname']
-        student = Student.objects.create(user=request.user)
-        student.save()
-        return HttpResponse("created user")
-    else:
-        cur_student = get_student(request)
-
-        STATUS = {
-            0: 'студент',
-            1: 'заместитель старосты',
-            2: 'староста'
-        }
-
-        group = Student.objects.filter(room=cur_student.room)
-
-        contex = {
-            'navbar': 'profile',
-            'cur_student': cur_student,
-            'perm': cur_student.permission,
-            'status': STATUS.get(cur_student.permission),
-            'group': group,
-            'STATUS': STATUS
-        }
-        return render(request, "main/profile.html", context=contex)
+            return redirect('signin')
+        if request.POST.get('firstname'):
+            request.user.first_name = request.POST['firstname']
+        if request.POST.get('lastname'):
+            request.user.last_name = request.POST['lastname']
+        if request.POST.get('email'):
+            request.user.email = request.POST['email']
+        if cur_student.permission == '2':
+            room = cur_student.room
+            room.name = request.POST['room']
+            room.save()
+        if request.user.check_password(request.POST['pass']):
+            print('hi')
+            if request.POST['password1']==request.POST['password2']:
+                request.user.set_password(request.POST['password1'])
+        request.user.save()
+    STATUS = {
+        0: 'студент',
+        1: 'заместитель старосты',
+        2: 'староста'
+    }
+    group = Student.objects.filter(room=cur_student.room)
+    room_name = cur_student.room.name
+    contex = {
+        'navbar': 'profile',
+        'cur_student': cur_student,
+        'perm': cur_student.permission,
+        'status': STATUS.get(cur_student.permission),
+        'group': group,
+        'room_name':room_name,
+        'STATUS': STATUS
+    }
+    return render(request, "main/profile.html", context=contex)
 
 
 @register.filter

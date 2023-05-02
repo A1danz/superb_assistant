@@ -29,8 +29,8 @@
           <a href=/ class="header__link {% if navbar == 'index' %} header__selected {% endif %}">Доска объявлений</a>
           <a href=timetable class="header__link {% if navbar == 'timatable' %} header__selected {% endif %}">Расписание</a>
           <a href=materials class="header__link {% if navbar == 'materials' %} header__selected {% endif %}">Учебные материалы</a>
-          <a href=contacts class="header__link {% if navbar == 'contacts' %} header__selected {% endif %}">Контакты</a>
-          <a href=profile class="header__link {% if navbar == 'profile' %} header__selected {% endif %}">Профиль</a>
+          <a href="{%url 'contacts'%}" class="header__link {% if navbar == 'contacts' %} header__selected {% endif %}">Контакты</a>
+          <a href="{%url 'profile'%}" class="header__link {% if navbar == 'profile' %} header__selected {% endif %}">Профиль</a>
           </div>
         </div>
       </header>

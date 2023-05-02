@@ -14,9 +14,9 @@
           {% csrf_token %}
           <input type="text" class="profile__input input" name="lastname" placeholder="фамилия" value="{{ user.last_name }}">
           <input type="text" class="profile__input input" name="firstname" placeholder="имя" value="{{ user.first_name }}">
-          <input type="email" class="profile__input input" placeholder="электронная почта" value="{{ user.email }}">
+          <input type="text" class="profile__input input" name="email" placeholder="электронная почта" value="{{ user.email }}">
           {% if perm == 2 %}
-          <input type="text" class="profile__input input" placeholder="группа" value="11-201">
+          <input type="text" class="profile__input input" name="room" placeholder="группа" value={{room_name}}>
           {% endif %}
           <input type="submit" class="btn" name = 'save' value="СОХРАНИТЬ">
           <form method="post">
@@ -28,23 +28,23 @@
         <h4 class="profile__title">
           ПАРОЛЬ
         </h4>
-        <form class="profile__form" action="">
+        <form class="profile__form" action="" method="post">
+          {% csrf_token %}
           <div class="profile__new-password">
-
-            <label class="password__label">
-              <input type="password" class="input password profile__password" placeholder="новый пароль">
+            <label class="password__label" name="password">
+              <input type="password" class="input password profile__password" name='password1' placeholder="новый пароль">
               <i class="sign__eye uil uil-eye"></i>
             </label>
-            <label class="password__label">
-              <input type="password" class="input password profile__password" placeholder="подтверждение нового пароля">
+            <label class="password__label" name="password">
+              <input type="password" class="input password profile__password" name='password2' placeholder="подтверждение нового пароля">
               <i class="sign__eye uil uil-eye"></i>
             </label>
           </div>
-          <label class="password__label">
-            <input type="password" class="input password profile__input" placeholder="текущий пароль">
+          <label class="password__label" name="pass">
+            <input type="password" class="input password profile__input" name='pass' placeholder="текущий пароль">
             <i class="sign__eye uil uil-eye"></i>
           </label>
-          <input type="submit" class="btn" value="ОБНОВИТЬ ПАРОЛЬ">
+          <input type="submit" class="btn" name='newpass' value="ОБНОВИТЬ ПАРОЛЬ">
         </form>
       </div>
       <div class="profile__box">
