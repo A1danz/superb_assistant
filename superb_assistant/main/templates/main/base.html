@@ -25,12 +25,12 @@
       <header class="header">
         <div class="container">
           <div class="header__container">
-          <a href=log class="header__link {% if navbar == 'log' %} header__selected {% endif %}">Журнал посещаемости</a>
-          <a href=/ class="header__link {% if navbar == 'index' %} header__selected {% endif %}">Доска объявлений</a>
-          <a href=timetable class="header__link {% if navbar == 'timatable' %} header__selected {% endif %}">Расписание</a>
-          <a href=materials class="header__link {% if navbar == 'materials' %} header__selected {% endif %}">Учебные материалы</a>
-          <a href=contacts class="header__link {% if navbar == 'contacts' %} header__selected {% endif %}">Контакты</a>
-          <a href=profile class="header__link {% if navbar == 'profile' %} header__selected {% endif %}">Профиль</a>
+          <a href="{% url 'log' %}" class="header__link {% if navbar == 'log' %} header__selected {% endif %}">Журнал посещаемости</a>
+          <a href="{% url 'index' %}" class="header__link {% if navbar == 'index' %} header__selected {% endif %}">Доска объявлений</a>
+          <a href="{% url 'timetable' %}" class="header__link {% if navbar == 'timatable' %} header__selected {% endif %}">Расписание</a>
+          <a href="{% url 'materials' %}" class="header__link {% if navbar == 'materials' %} header__selected {% endif %}">Учебные материалы</a>
+          <a href="{% url 'contacts' %}" class="header__link {% if navbar == 'contacts' %} header__selected {% endif %}">Контакты</a>
+          <a href="{% url 'profile' %}" class="header__link {% if navbar == 'profile' %} header__selected {% endif %}">Профиль</a>
           </div>
         </div>
       </header>
