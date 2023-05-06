@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.template.defaulttags import register
@@ -25,7 +26,7 @@ def signin(request):
             if user is not None:
                 login(request, user)
                 return redirect('profile')
-                #return render(request, 'main/profile.html')
+                # return render(request, 'main/profile.html')
             else:
                 context = {'form': form,
                            'error': 'Логин или пароль неверны'}
@@ -78,6 +79,7 @@ def signup(request):
             return render(request, "main/signup.html", context)
     else:
         return render(request, 'main/signup.html')
+
 
 #
 # @login_required()
@@ -136,10 +138,6 @@ def materials(request):
 def timetable(request):
     cur_student = get_student(request)
     if request.method == "POST":
-        print(request.POST)
-        form = LessonForm(request.POST)
-        num = 0
-        day = 0
         st = ""
         for i in request.POST.keys():
             if i.find('*'):
@@ -147,11 +145,11 @@ def timetable(request):
         num = st[-1]
         day = st[0]
         lesson = Lesson.objects.get(num=num, day=day)
-        lesson.start_time=request.POST['start_time']
-        lesson.end_time= request.POST['end_time']
-        lesson.name=request.POST['name']
-        lesson.room_num=request.POST['room_num']
-        lesson.schedule=cur_student.room
+        lesson.start_time = request.POST['start_time']
+        lesson.end_time = request.POST['end_time']
+        lesson.name = request.POST['name']
+        lesson.room_num = request.POST['room_num']
+        lesson.schedule = cur_student.room
         lesson.save()
     list = Lesson.objects.filter(schedule=cur_student.room)
     dict_of_lessons = {}
@@ -219,11 +217,22 @@ def profile(request):
             room = cur_student.room
             room.name = request.POST['room']
             room.save()
-        if request.user.check_password(request.POST['pass']):
-            print('hi')
-            if request.POST['password1'] == request.POST['password2']:
-                request.user.set_password(request.POST['password1'])
+        # if request.user.check_password(request.POST['pass']):
+        #     if request.POST['password1'] == request.POST['password2']:
+        #         request.user.set_password(request.POST['password1'])
         request.user.save()
+        for key in request.POST.keys():
+            if 'del' in key:
+                student = User.objects.get(username=key.split()[-1])
+                student = Student.objects.get(user=student.id)
+                student.permission = 0
+                student.save()
+            if 'add' in key:
+                student = User.objects.get(username=key.split()[-1])
+                student = Student.objects.get(user=student.id)
+                student.permission = 1
+                student.save()
+
     STATUS = {
         0: 'студент',
         1: 'заместитель старосты',
@@ -237,7 +246,7 @@ def profile(request):
         'perm': cur_student.permission,
         'status': STATUS.get(cur_student.permission),
         'group': group,
-        'room_name':room_name,
+        'room_name': room_name,
         'STATUS': STATUS
     }
     return render(request, "main/profile.html", context=contex)

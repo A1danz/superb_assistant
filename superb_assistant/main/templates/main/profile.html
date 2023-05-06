@@ -61,7 +61,7 @@
         </div>
         {% for student in group %}
         <form class="profile__person" action="" method="post">
-                  {% csrf_token %}
+          {% csrf_token %}
           <p class="profile__person-name">
             {{ student.user.first_name }} {{ student.user.last_name }}
           </p>
@@ -77,13 +77,13 @@
             {% endif %}
 
             {% if student.permission == 1 %}
-              <button class="profile__person-btn" name="{{ student.user }}">
+              <button class="profile__person-btn" name="del {{ student.user }}">
                 удалить роль
               </button>
             {% endif %}
 
             {% if student.permission == 0 %}
-              <button class="profile__person-btn" name="{{ student.user }}">
+              <button class="profile__person-btn" name="add {{ student.user }}">
                 выдать роль
               </button>
             {% endif %}
