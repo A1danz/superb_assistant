@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="container">
-
       <div class="timetable__container">
       {% for day, lessons in data.items %}
         <div class="timetable__column">
@@ -19,7 +18,7 @@
                 <input type="text" class="timetable__time" name="end_time" placeholder="конец пары" value="{{ lesson.end_time|time:'H:i'}}">
                 <input type="text" class="timetable__text" name="name" placeholder="пара" value="{{ lesson.name}}">
                 <input type="text" class="timetable__text" name="room_num" placeholder="аудитория" value="{{ lesson.room_num}}">
-              <button class="mini-btn btn-change">изменить</button>
+                <button name="{{lesson.day}}*{{lesson.num}}" id="{{lesson.day}}.{{lesson.num}}" class="mini-btn btn-change">изменить</button>
               </form>
             {% else %}
               <div class="timetable__cell">

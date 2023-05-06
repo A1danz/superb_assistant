@@ -136,17 +136,27 @@ def materials(request):
 def timetable(request):
     cur_student = get_student(request)
     if request.method == "POST":
+        print(request.POST)
         form = LessonForm(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            print(form.instance)
-
+        num = 0
+        day = 0
+        st = ""
+        for i in request.POST.keys():
+            if i.find('*'):
+                st = i
+        num = st[-1]
+        day = st[0]
+        lesson = Lesson.objects.get(num=num, day=day)
+        lesson.start_time=request.POST['start_time']
+        lesson.end_time= request.POST['end_time']
+        lesson.name=request.POST['name']
+        lesson.room_num=request.POST['room_num']
+        lesson.schedule=cur_student.room
+        lesson.save()
     list = Lesson.objects.filter(schedule=cur_student.room)
     dict_of_lessons = {}
     for i in range(1, 7):
         dict_of_lessons[i] = list.filter(day=i)
-
-
     DAY = {
         1: 'Понедельник',
         2: 'Вторник',
@@ -157,7 +167,7 @@ def timetable(request):
     }
 
     contex = {
-        'navbar': 'timatable',
+        'navbar': 'timetable',
         'DAY': DAY,
         'perm': get_perm(cur_student.permission),
         'data': dict_of_lessons
@@ -268,6 +278,8 @@ def create_schedule(room):
         ('19:10', '20:40')
     )
 
-    for i in range(0, 7):
+    for i in range(1, 7):
+        k = 1
         for time in default_time:
-            Lesson.objects.create(day=i, start_time=time[0], end_time=time[1], schedule=room)
+            Lesson.objects.create(day=i, start_time=time[0], end_time=time[1], schedule=room, num=k)
+            k = k + 1

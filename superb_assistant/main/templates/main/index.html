@@ -7,7 +7,8 @@
         <div class="container">
           <div class="board__container">
             {% if perm %}
-            <button class="btn btn-modal">ДОБАВИТЬ НОВОЕ ОБЪЯВЛЕНИЕ</button>
+            <button name="new" class="btn btn-modal" >ДОБАВИТЬ НОВОЕ ОБЪЯВЛЕНИЕ</button>
+            <button name="data" class="btn btn-primary" form="data">СОХРАНИТЬ ОБЪЯВЛЕНИЕ</button>
             {% endif %}
             {% for elem in posts %}
             <div class="board__cell">
@@ -24,8 +25,8 @@
               </p>
               {% if perm %}
               <div class="board__btns">
-                <button class="mini-btn btn-change">ИЗМЕНИТЬ</button>
-                <button class="mini-btn btn-cancel">
+                <button name="change" class="mini-btn btn-change">ИЗМЕНИТЬ</button>
+                <button name="delete" class="mini-btn btn-cancel">
                   УДАЛИТЬ
                 </button>
               </div>
@@ -37,19 +38,23 @@
 {% endblock content%}
 
 {% block modal %}
-      <div class="modal__overlay animate__animated animate__fadeIn">
-        <div class="modal__content animate__animated animate__backInDown ">
-          <h4 class="modal__title">
-            НОВЫЙ МАТЕРИАЛ
-          </h4>
-          <form class="modal__form" action="">
-            <input type="text" class="modal__input modal__input-name input" placeholder="название материала">
-            <textarea class="modal__textarea input" placeholder="описание объявления"></textarea>
-            <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
-          </form>
-          <i class="modal__icon uil uil-times"></i>
-        </div>
+<form id="data" method="post" action="">
+    {% csrf_token %}
+    <div class="modal__overlay animate__animated animate__fadeIn">
+      <div class="modal__content animate__animated animate__backInDown ">
+        <h4 class="modal__title">
+          НОВЫЙ МАТЕРИАЛ
+        </h4>
+        <form class="modal__form" action="" method="post">
+          {% csrf_token %}
+          <input type="text" name="name" class="modal__input modal__input-name input" placeholder="название">
+          <textarea name="text" class="modal__textarea input" placeholder="описание объявления"></textarea>
+          <input type="submit" name="submit" class="modal__btn btn" value="ДОБАВИТЬ">
+        </form>
+        <i class="modal__icon uil uil-times"></i>
       </div>
+    </div>
+</form>
 {% endblock modal %}
 
 {% block js %}
