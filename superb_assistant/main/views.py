@@ -7,7 +7,7 @@ from django.views.generic import ListView
 from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, FileResponse
-from .forms import Loginform
+from .forms import Loginform, LessonForm
 
 
 def signin(request):
@@ -92,8 +92,6 @@ def signup(request):
 
 @login_required()
 def index(request):
-    if request.user.is_authenticated:
-        print(request.user.last_name)
     cur_student = get_student(request)
     posts = Post.objects.filter(room=cur_student.room)
 
@@ -137,7 +135,17 @@ def materials(request):
 @login_required()
 def timetable(request):
     cur_student = get_student(request)
+    if request.method == "POST":
+        form = LessonForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            print(form.instance)
+
     list = Lesson.objects.filter(schedule=cur_student.room)
+    dict_of_lessons = {}
+    for i in range(1, 7):
+        dict_of_lessons[i] = list.filter(day=i)
+
 
     DAY = {
         1: 'Понедельник',
@@ -149,10 +157,10 @@ def timetable(request):
     }
 
     contex = {
-        'list': list,
         'navbar': 'timatable',
         'DAY': DAY,
-        'perm': get_perm(cur_student.permission)
+        'perm': get_perm(cur_student.permission),
+        'data': dict_of_lessons
     }
 
     return render(request, "main/timetable.html", context=contex)
@@ -203,7 +211,7 @@ def profile(request):
             room.save()
         if request.user.check_password(request.POST['pass']):
             print('hi')
-            if request.POST['password1']==request.POST['password2']:
+            if request.POST['password1'] == request.POST['password2']:
                 request.user.set_password(request.POST['password1'])
         request.user.save()
     STATUS = {
@@ -247,3 +255,19 @@ def get_perm(permission):
     if permission == 0:
         return False
     return True
+
+
+def create_schedule(room):
+    default_time = (
+        ('8:30', '10:00'),
+        ('10:10', '11:40'),
+        ('12:10', '13:40'),
+        ('13:50', '15:20'),
+        ('15:50', '17:20'),
+        ('17:30', '19:00'),
+        ('19:10', '20:40')
+    )
+
+    for i in range(0, 7):
+        for time in default_time:
+            Lesson.objects.create(day=i, start_time=time[0], end_time=time[1], schedule=room)

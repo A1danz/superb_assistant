@@ -3,26 +3,38 @@
 {% block title %}Расписание{% endblock title %}
 
 {% block content %}
-    <div class="container">
+<div class="container">
 
       <div class="timetable__container">
-      {% for elem in list %}
+      {% for day, lessons in data.items %}
         <div class="timetable__column">
           <h3 class="timetable__title">
-            {{ DAY|get_item:elem.day }}
+            {{ DAY|get_item:day }}
           </h3>
-
-          <div class="timetable__cell">
-            <p class="timetable__time">
-              {{ elem.start_time|time:"H:i" }} - {{ elem.end_time|time:"H:i" }}
-            </p>
-            <p class="timetable__text">
-              {{ elem.name }}
-            </p>
-            <p class="timetable__text">
-              {{ elem.room_num }}
-            </p>
-          </div>
+          {% for lesson in lessons %}
+            {% if perm == 1 or perm == 2 %}
+              <form class="timetable__cell" method="post">
+                  {% csrf_token %}
+                <input type="text" class="timetable__time" name="start_time" placeholder="начало пары" value="{{ lesson.start_time|time:'H:i'}}">
+                <input type="text" class="timetable__time" name="end_time" placeholder="конец пары" value="{{ lesson.end_time|time:'H:i'}}">
+                <input type="text" class="timetable__text" name="name" placeholder="пара" value="{{ lesson.name}}">
+                <input type="text" class="timetable__text" name="room_num" placeholder="аудитория" value="{{ lesson.room_num}}">
+              <button class="mini-btn btn-change">изменить</button>
+              </form>
+            {% else %}
+              <div class="timetable__cell">
+                  <p class="timetable__time">
+                    {{ lesson.start_time|time:"H:i" }} - {{ lesson.end_time|time:"H:i" }}
+                  </p>
+                  <p class="timetable__text">
+                    {{ lesson.name }}
+                  </p>
+                  <p class="timetable__text">
+                    {{ lesson.room_num }}
+                  </p>
+              </div>
+            {% endif %}
+          {% endfor %}
 
         </div>
       {% endfor %}
