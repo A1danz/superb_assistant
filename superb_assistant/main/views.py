@@ -205,7 +205,7 @@ def profile(request):
             request.user.last_name = request.POST['lastname']
         if request.POST.get('email'):
             request.user.email = request.POST['email']
-        if cur_student.permission == '2':
+        if request.POST.get('room'):
             room = cur_student.room
             room.name = request.POST['room']
             room.save()

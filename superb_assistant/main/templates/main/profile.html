@@ -48,6 +48,7 @@
         </form>
       </div>
       <div class="profile__box">
+
         <h4 class="profile__title">
           ГРУППА
         </h4>
@@ -59,7 +60,8 @@
           {% endif %}
         </div>
         {% for student in group %}
-        <div class="profile__person">
+        <form class="profile__person" action="" method="post">
+                  {% csrf_token %}
           <p class="profile__person-name">
             {{ student.user.first_name }} {{ student.user.last_name }}
           </p>
@@ -75,18 +77,18 @@
             {% endif %}
 
             {% if student.permission == 1 %}
-              <div class="profile__person-btn">
+              <button class="profile__person-btn" name="{{ student.user }}">
                 удалить роль
-              </div>
+              </button>
             {% endif %}
 
             {% if student.permission == 0 %}
-              <div class="profile__person-btn">
+              <button class="profile__person-btn" name="{{ student.user }}">
                 выдать роль
-              </div>
+              </button>
             {% endif %}
           {% endif %}
-        </div>
+        </form>
         {% endfor %}
       </div>
     </div>
