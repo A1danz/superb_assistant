@@ -217,9 +217,9 @@ def profile(request):
             room = cur_student.room
             room.name = request.POST['room']
             room.save()
-        # if request.user.check_password(request.POST['pass']):
-        #     if request.POST['password1'] == request.POST['password2']:
-        #         request.user.set_password(request.POST['password1'])
+        if request.user.check_password(request.POST.get('pass', False)):
+            if request.POST['password1'] == request.POST['password2']:
+                request.user.set_password(request.POST['password1'])
         request.user.save()
         for key in request.POST.keys():
             if 'del' in key:
