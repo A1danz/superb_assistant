@@ -158,6 +158,8 @@ def timetable(request):
         lesson.schedule = cur_student.room
         lesson.save()
     list = Lesson.objects.filter(schedule=cur_student.room)
+    if not list.exists():
+        create_schedule(cur_student.room)
     dict_of_lessons = {}
     for i in range(1, 7):
         dict_of_lessons[i] = list.filter(day=i)
