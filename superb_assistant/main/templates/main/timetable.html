@@ -11,13 +11,13 @@
             {{ DAY|get_item:day }}
           </h3>
           {% for lesson in lessons %}
-            {% if perm == 1 or perm == 2 %}
+            {% if perm %}
               <form class="timetable__cell" method="post">
                   {% csrf_token %}
-                <input type="text" class="timetable__time" name="start_time" placeholder="начало пары" value="{{ lesson.start_time|time:'H:i'}}">
-                <input type="text" class="timetable__time" name="end_time" placeholder="конец пары" value="{{ lesson.end_time|time:'H:i'}}">
-                <input type="text" class="timetable__text" name="name" placeholder="пара" value="{{ lesson.name}}">
-                <input type="text" class="timetable__text" name="room_num" placeholder="аудитория" value="{{ lesson.room_num}}">
+                <input type="text" class="timetable__input" name="start_time" placeholder="начало пары" value="{{ lesson.start_time|time:'H:i'}}">
+                <input type="text" class="timetable__input" name="end_time" placeholder="конец пары" value="{{ lesson.end_time|time:'H:i'}}">
+                <input type="text" class="timetable__input" name="name" placeholder="пара" value="{{ lesson.name}}">
+                <input type="text" class="timetable__input" name="room_num" placeholder="аудитория" value="{{ lesson.room_num}}">
                 <button name="{{lesson.day}}*{{lesson.num}}" id="{{lesson.day}}.{{lesson.num}}" class="mini-btn btn-change">изменить</button>
               </form>
             {% else %}

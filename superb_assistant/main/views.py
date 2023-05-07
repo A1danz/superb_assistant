@@ -97,6 +97,12 @@ def index(request):
     cur_student = get_student(request)
     posts = Post.objects.filter(room=cur_student.room)
 
+    # if request.method == "POST":
+    #     print(request.POST)
+    #     for key in request.POST.keys():
+    #         if "delete" in key:
+    #             print(key)
+
     contex = {
         'posts': posts,
         'navbar': 'index',

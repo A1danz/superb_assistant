@@ -1263,3 +1263,17 @@ body {
   border-radius: 8px;
   color: #52057B;
 }
+
+.timetable__input {
+  width: 186px;
+  padding: 10px;
+  border: 2px solid #8E54B7;
+  border-radius: 5px;
+  background-color: transparent;
+  color: white;
+  font-size: 16px;
+ }
+ .timetable__input::placeholder {
+  color: #8E54B7;
+  font-size: 16px;
+}

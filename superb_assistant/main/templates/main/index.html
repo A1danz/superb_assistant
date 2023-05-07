@@ -24,12 +24,12 @@
                   {{ elem.text }}
               </p>
               {% if perm %}
-              <div class="board__btns">
+              <form class="board__btns" method="post">
                 <button name="change" class="mini-btn btn-change">ИЗМЕНИТЬ</button>
-                <button name="delete" class="mini-btn btn-cancel">
+                <button name="delete {{elem.id}}" class="mini-btn btn-cancel">
                   УДАЛИТЬ
                 </button>
-              </div>
+              </form>
               {% endif %}
             </div>
             {% endfor %}
