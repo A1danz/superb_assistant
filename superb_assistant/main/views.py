@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -185,19 +187,31 @@ def timetable(request):
 @login_required()
 def log(request):
     cur_student = get_student(request)
-    lessons = AttendanceLog.objects.filter(room=cur_student.room)
-
+    lessons = []
+    for name in Lesson.objects.filter(schedule=cur_student.room).values_list('name'):
+        lesson = re.search(r'[\w ]+', str(name))
+        if lesson is not None:
+            lessons.append(lesson.group())
     contex = {
         'perm': get_perm(cur_student.permission),
-        'lessons': lessons,
-        'navbar': 'log'
+        'log': log,
+        'navbar': 'log',
+        'lessons': lessons
     }
     return render(request, "main/log.html", context=contex)
 
 
 @login_required()
 def lesson(request):
-    contex = {}
+    cur_student = get_student(request)
+    group = Student.objects.filter(room=cur_student.room)
+    lesson_name = ""
+    data = AttendanceLog.objects.filter(room=cur_student.room)
+    contex = {
+        'perm': get_perm(cur_student.permission),
+        'group': group,
+        'lesson_name': lesson_name
+    }
     return render(request, "main/lesson.html", context=contex)
 
 

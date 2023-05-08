@@ -13,7 +13,9 @@
                 Список предметов
               </div>
               <div class="log__links">
-                <a class="log__link" href="lesson">РУССКИЙ ЯЗЫК</a>
+                  {% for lesson in lessons %}
+                <a class="log__link" href="lesson" name="{{ lesson }}">{{ lesson }}</a>
+                  {% endfor %}
               </div>
             </div>
           </div>

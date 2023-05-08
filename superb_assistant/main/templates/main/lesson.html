@@ -10,13 +10,16 @@
             {% endif %}
             <div class="lesson__box">
               <div class="lesson__title">
-                АЛГЕМ
+                {{ lesson_name }}
               </div>
               <div class="lesson__package">
                 <div class="lesson__names">
-                  <div class="lesson__name">Гималетдинова Айсылу</div>
+                  {% for student in group %}
+                  <div class="lesson__name">{{ student.user.first_name }} {{ student.user.last_name }}</div>
+                  {% endfor %}
                 </div>
                 <div class="lesson__table">
+                  {% for date in data %}
                   <div class="lesson__column">
                     <div class="lesson__date">
                       23.04
@@ -34,6 +37,7 @@
                     <div class="lesson__cell lesson__sick">Н</div>
                     <div class="lesson__cell"></div>
                   </div>
+                  {% endfor %}
                 </div>
               </div>
             </div>
