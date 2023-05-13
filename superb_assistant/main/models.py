@@ -79,7 +79,7 @@ class Lesson(models.Model):
     num = models.SmallIntegerField(default=0)
 
     def __str__(self):
-        return f'{self.day}: {self.name}'
+        return f'{self.schedule} {self.day}: {self.num}'
 
 
 class AttendanceLog(models.Model):

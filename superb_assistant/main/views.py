@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.template.defaultfilters import upper
 from django.template.defaulttags import register
-from django.views.generic import ListView
 
 from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm
@@ -98,7 +98,6 @@ def signup(request):
 def index(request):
     cur_student = get_student(request)
     posts = Post.objects.filter(room=cur_student.room)
-
     # if request.method == "POST":
     #     print(request.POST)
     #     for key in request.POST.keys():
@@ -152,10 +151,10 @@ def timetable(request):
                 st = i
         num = st[-1]
         day = st[0]
-        lesson = Lesson.objects.get(num=num, day=day)
+        lesson = Lesson.objects.get(schedule=cur_student.room, num=num, day=day)
         lesson.start_time = request.POST['start_time']
         lesson.end_time = request.POST['end_time']
-        lesson.name = request.POST['name']
+        lesson.name = upper(request.POST['name'])
         lesson.room_num = request.POST['room_num']
         lesson.schedule = cur_student.room
         lesson.save()
@@ -187,11 +186,15 @@ def timetable(request):
 @login_required()
 def log(request):
     cur_student = get_student(request)
-    lessons = []
+    if request.method == "POST":
+        request.session['lesson_name'] = list(request.POST.keys())[1]
+        return redirect('lesson')
+    lessons = set()
     for name in Lesson.objects.filter(schedule=cur_student.room).values_list('name'):
         lesson = re.search(r'[\w ]+', str(name))
         if lesson is not None:
-            lessons.append(lesson.group())
+            lessons.add(lesson.group())
+
     contex = {
         'perm': get_perm(cur_student.permission),
         'log': log,
@@ -204,20 +207,31 @@ def log(request):
 @login_required()
 def lesson(request):
     cur_student = get_student(request)
+    cur_lesson = request.session.get('lesson_name')
     group = Student.objects.filter(room=cur_student.room)
-    lesson_name = ""
-    data = AttendanceLog.objects.filter(room=cur_student.room)
+    data = AttendanceLog.objects.filter(room=cur_student.room, lesson=cur_lesson)
+    dates_iterator = data.values_list('date').iterator()
+    dates = set(i for i in dates_iterator)
+    list_of_students_by_date = {}
+    for i in dates:
+        list_of_students_by_date[i] = data.filter(date=i[0])
     contex = {
         'perm': get_perm(cur_student.permission),
         'group': group,
-        'lesson_name': lesson_name
+        'lesson_name': cur_lesson,
+        'data': list_of_students_by_date
     }
     return render(request, "main/lesson.html", context=contex)
 
 
 @login_required()
 def lesson_edit(request):
-    contex = {}
+    cur_student = get_student(request)
+    group = Student.objects.filter(room=cur_student.room)
+    contex = {
+        'group': group,
+        'lesson_name': request.session.get('lesson_name')
+    }
     return render(request, "main/lesson_edit.html", context=contex)
 
 
