@@ -35,10 +35,19 @@ class Student(models.Model):
         (STUDENT_WITH_CAPABILITIES, 'Студент с дополнительными возможностями'),
         (HEADMAN, 'Староста')
     ]
+
+    IS_APPPROVED = 2
+    WAITING = 1
+    NOT_APPPROVED = 0
+    STATE =[
+        (IS_APPPROVED, 'Одобрено'),
+        (WAITING, "Ожидание"),
+        (NOT_APPPROVED, "Не одобрено")
+    ]
     permission = models.SmallIntegerField(choices=PERMISSION, default=SIMPLE_STUDENT)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
+    state = models.SmallIntegerField(choices=STATE, default=WAITING)
     def __str__(self):
         return self.user.__str__()
 
