@@ -64,7 +64,7 @@ def signup(request):
             else:
                 room = Room.objects.get(pk=request.POST['roomnum'])
                 new_user.save()
-                student = Student.objects.create(room=room, user=new_user)
+                student = Student.objects.create(room=room, user=new_user, state=2)
                 student.save()
                 return redirect('profile')
         else:
