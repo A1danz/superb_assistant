@@ -190,10 +190,11 @@ def log(request):
         request.session['lesson_name'] = list(request.POST.keys())[1]
         return redirect('lesson')
     lessons = set()
-    for name in Lesson.objects.filter(schedule=cur_student.room).values_list('name'):
-        lesson = re.search(r'[\w ]+', str(name))
-        if lesson is not None:
-            lessons.add(lesson.group())
+    data = Lesson.objects.filter(schedule=cur_student.room).values_list('name')
+    for name in data:
+        lesson = name[0]
+        if lesson is not '':
+            lessons.add(lesson)
 
     contex = {
         'perm': get_perm(cur_student.permission),
