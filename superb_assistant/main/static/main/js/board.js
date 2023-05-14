@@ -2,6 +2,8 @@ let $btn = document.querySelector('.btn-modal');
 let modal = document.querySelector('.modal');
 $btn.addEventListener('click', openModal);
 
+
+
 function openModal() {
   document.querySelector('.modal__title').textContent = 'НОВОЕ ОБЪЯВЛЕНИЕ';
   document.querySelector('.modal__btn').value = "ДОБАВИТЬ";
@@ -74,6 +76,8 @@ function openModalChange(e) {
   modal.style.display = 'block';
   document.querySelector('body').style.overflowY = 'hidden';
 
+  add_csrf_token();
+
   document.querySelector('.modal__btn').addEventListener('click', changeCell);
 
   function changeCell(e) {
@@ -127,4 +131,14 @@ function notify(string) {
   setTimeout(() => {
     notification.style.transform = ''
   }, 2000)
+}
+
+
+function add_csrf_token() {
+  var form = document.getElementByClass('modal__form'); // замените 'form-id' на идентификатор вашей формы
+  var csrf_token = document.createElement('input');
+  csrf_token.type = 'hidden';
+  csrf_token.name = 'csrfmiddlewaretoken'; // имя поля с CSRF-токеном должно быть 'csrfmiddlewaretoken'
+  csrf_token.value = '{% csrf_token %}'; // значение CSRF-токена из контекста Django
+  form.appendChild(csrf_token);
 }

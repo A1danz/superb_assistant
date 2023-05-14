@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Lesson
+from .models import Lesson, Post
 
 
 class Loginform(forms.Form):
@@ -12,4 +12,9 @@ class LessonForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = ['start_time', 'end_time', 'name', 'room_num']
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = '__all__'
 

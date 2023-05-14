@@ -10,7 +10,7 @@ from django.template.defaulttags import register
 from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, FileResponse
-from .forms import Loginform, LessonForm
+from .forms import Loginform, LessonForm, PostForm
 
 
 def signin(request):
@@ -344,7 +344,12 @@ def create_schedule(room):
 def add_post(request):
     print("hi")
     if request.method == "POST":
-        print("Hi", request.user)
-        print(request.POST)
-        return HttpResponse("Ok")
-
+        post_data = request.POST.dict()
+        post_data["room"] = get_student(request).room
+        print(post_data)
+        form = PostForm(post_data)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        return redirect('index')
