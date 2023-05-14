@@ -48,6 +48,7 @@ class Student(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     state = models.SmallIntegerField(choices=STATE, default=WAITING)
+
     def __str__(self):
         return self.user.__str__()
 

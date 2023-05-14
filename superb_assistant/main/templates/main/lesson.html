@@ -19,7 +19,7 @@
                   {% endfor %}
                 </div>
                 <div class="lesson__table">
-                  {% for key, values in data.items %}
+                  {% for key, list_by_status in data_by_date.items %}
                   <div class="lesson__column">
                     <div class="lesson__date">
                       {{ key.0|date:"d.m" }}
@@ -33,25 +33,28 @@
                       {% endif %}
                     </div>
                     {% for student in group %}
-                      {% for st in values.students %}
-                        {% if student == st %}
-                          {% if status == vr %}
-                            <div class="lesson__cell lesson__dear">У</div>
+                      {% for status, people in list_by_status.items %}
+                        {% for person in people %}
+                          {% if person == student %}
+                              {% if status == 'vr' %}
+                                <div class="lesson__cell lesson__dear">УВ</div>
+                              {% endif %}
+                              {% if status == 'ill' %}
+                                <div class="lesson__cell lesson__wasnt">Б</div>
+                              {% endif %}
+                              {% if status == 'abs' %}
+                                <div class="lesson__cell lesson__sick">Н</div>
+                              {% endif %}
+                              {% if status == 'be' %}
+                                <div class="lesson__cell"></div>
+                              {% endif %}
                           {% endif %}
-                          {% if status == ill %}
-                            <div class="lesson__cell lesson__wasnt">Б</div>
-                          {% endif %}
-                          {% if status == abs %}
-                            <div class="lesson__cell lesson__sick">Н</div>
-                          {% endif %}
-                          {% if status == be %}
-                            <div class="lesson__cell"></div>
-                          {% endif %}
-                        {% endif %}
+                        {% endfor %}
                       {% endfor %}
                     {% endfor %}
                   </div>
                   {% endfor %}
+
                 </div>
               </div>
             </div>

@@ -97,7 +97,7 @@ def signup(request):
 @login_required()
 def index(request):
     cur_student = get_student(request)
-    posts = Post.objects.filter(room=cur_student.room)
+    posts = Post.objects.filter(room=cur_student.room).order_by('-time')
     # if request.method == "POST":
     #     print(request.POST)
     #     for key in request.POST.keys():
@@ -116,7 +116,7 @@ def index(request):
 @login_required()
 def contacts(request):
     cur_student = get_student(request)
-    contacts = Contact.objects.filter(room=cur_student.room)
+    contacts = Contact.objects.filter(room=cur_student.room).order_by('-id')
 
     contex = {
         'contacts': contacts,
@@ -130,7 +130,7 @@ def contacts(request):
 @login_required()
 def materials(request):
     cur_student = get_student(request)
-    materials = StudyMaterial.objects.filter(room=cur_student.room)
+    materials = StudyMaterial.objects.filter(room=cur_student.room).order_by('-id')
 
     contex = {
         'materials': materials,
@@ -154,7 +154,7 @@ def timetable(request):
         lesson = Lesson.objects.get(schedule=cur_student.room, num=num, day=day)
         lesson.start_time = request.POST['start_time']
         lesson.end_time = request.POST['end_time']
-        lesson.name = upper(request.POST['name'])
+        lesson.name = upper(request.POST['name']).strip()
         lesson.room_num = request.POST['room_num']
         lesson.schedule = cur_student.room
         lesson.save()
@@ -214,13 +214,19 @@ def lesson(request):
     dates_iterator = data.values_list('date').iterator()
     dates = set(i for i in dates_iterator)
     list_of_students_by_date = {}
+
     for i in dates:
-        list_of_students_by_date[i] = data.filter(date=i[0])
+        temp = data.filter(date=i[0])
+        list_by_status = {}
+        for j in temp:
+            list_by_status[j.status] = j.students.all()
+        list_of_students_by_date[i] = list_by_status
+
     contex = {
         'perm': get_perm(cur_student.permission),
         'group': group,
         'lesson_name': cur_lesson,
-        'data': list_of_students_by_date
+        'data_by_date': list_of_students_by_date
     }
     return render(request, "main/lesson.html", context=contex)
 
