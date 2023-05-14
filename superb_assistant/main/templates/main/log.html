@@ -5,18 +5,18 @@
 {% block content %}
 <div class="container">
           <div class="log__container">
-              {% if perm %}
-            <button class="btn btn-modal">ДОБАВИТЬ НОВЫЙ ПРЕДМЕТ</button>
-              {% endif %}
             <div class="log__box">
               <div class="log__title">
                 Список предметов
               </div>
-              <div class="log__links">
+                <form method="post">
+              <div class="log__links" >
+                  {% csrf_token %}
                   {% for lesson in lessons %}
-                <a class="log__link" href="lesson" name="{{ lesson }}">{{ lesson }}</a>
+                    <button class="modal__btn btn" name="{{ lesson }}">{{ lesson }}</button>
                   {% endfor %}
               </div>
+                </form>
             </div>
           </div>
         </div>
@@ -25,20 +25,4 @@
     </div>
 {% endblock content%}
 
-{% block modal %}
-    <div class="modal">
-      <div class="modal__overlay animate__animated animate__fadeIn">
-        <div class="modal__content animate__animated animate__backInDown ">
-          <h4 class="modal__title">
-            НОВЫЙ ПРЕДМЕТ
-          </h4>
-          <form class="modal__form" action="">
-            <input type="text" class="modal__input modal__input-name input" placeholder="название материала">
-            <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
-          </form>
-          <i class="modal__icon uil uil-times"></i>
-        </div>
-      </div>
-    </div>
-{% endblock modal %}
 
