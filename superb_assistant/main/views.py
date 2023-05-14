@@ -96,6 +96,10 @@ def signup(request):
 
 @login_required()
 def index(request):
+    print(request.user)
+    if request.method == "POST":
+        print("board post-requets")
+        print("board post-requets")
     cur_student = get_student(request)
     posts = Post.objects.filter(room=cur_student.room)
 
@@ -130,6 +134,8 @@ def contacts(request):
 
 @login_required()
 def materials(request):
+    if request.method == "POST":
+        print("123")
     cur_student = get_student(request)
     materials = StudyMaterial.objects.filter(room=cur_student.room)
 
@@ -273,7 +279,6 @@ def profile(request):
     }
     return render(request, "main/profile.html", context=contex)
 
-
 @register.filter
 def get_item(dict, key):
     return dict.get(key)
@@ -314,3 +319,11 @@ def create_schedule(room):
         for time in default_time:
             Lesson.objects.create(day=i, start_time=time[0], end_time=time[1], schedule=room, num=k)
             k = k + 1
+
+def add_post(request):
+    print("hi")
+    if request.method == "POST":
+        print("Hi", request.user)
+        print(request.POST)
+        return HttpResponse("Ok")
+

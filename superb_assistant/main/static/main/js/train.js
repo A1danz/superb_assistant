@@ -5,6 +5,7 @@ $btn.addEventListener('click', openModal);
 function openModal() {
   document.querySelector('.modal__title').textContent = 'НОВЫЙ МАТЕРИАЛ';
   document.querySelector('.modal__btn').value = "ДОБАВИТЬ";
+  document.querySelector('.modal__form').action = "/add_post";
   document.querySelector('.modal__input-name').value = '';
   document.querySelector('.modal__input-link').value = '';
   modal.style.display = 'block';
@@ -12,7 +13,6 @@ function openModal() {
   document.querySelector('.modal__btn').addEventListener('click', createCell);
 
   function createCell(e) {
-    e.preventDefault();
     let link = document.querySelector('.modal__input-link').value;
     let name = document.querySelector('.modal__input-name').value;
     if (link && name) {
@@ -61,6 +61,7 @@ function openModalChange(e) {
   let parent = e.target.closest('.train-material__cell');
   document.querySelector('.modal__title').textContent = 'ИЗМЕНИТЬ МАТЕРИАЛ';
   document.querySelector('.modal__btn').value = "ИЗМЕНИТЬ";
+  document.querySelector('.modal__form').action = "/edit_post";
   document.querySelector('.modal__input-name').value = parent.querySelector('.train-material__title').textContent.trim();
   document.querySelector('.modal__input-link').value = parent.querySelector('.train-material__link').textContent.trim();
   modal.style.display = 'block';
@@ -69,7 +70,6 @@ function openModalChange(e) {
   document.querySelector('.modal__btn').addEventListener('click', changeCell);
 
   function changeCell(e) {
-    e.preventDefault();
     let name = document.querySelector('.modal__input-name').value;
     let link = document.querySelector('.modal__input-link').value;
     if (name === '' || link === '') {

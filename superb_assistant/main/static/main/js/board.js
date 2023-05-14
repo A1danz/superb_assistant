@@ -5,6 +5,7 @@ $btn.addEventListener('click', openModal);
 function openModal() {
   document.querySelector('.modal__title').textContent = 'НОВОЕ ОБЪЯВЛЕНИЕ';
   document.querySelector('.modal__btn').value = "ДОБАВИТЬ";
+  document.querySelector('.modal__form').action = "/add_post";
   document.querySelector('.modal__input-name').value = '';
   document.querySelector('.modal__textarea').value = '';
   modal.style.display = 'block';
@@ -12,7 +13,6 @@ function openModal() {
   document.querySelector('.modal__btn').addEventListener('click', createCell);
 
   function createCell(e) {
-    e.preventDefault();
     let name = document.querySelector('.modal__input-name').value;
     let text = document.querySelector('.modal__textarea').value;
     if (name && text) {
@@ -68,6 +68,7 @@ function openModalChange(e) {
   let parent = e.target.closest('.board__cell');
   document.querySelector('.modal__title').textContent = 'ИЗМЕНИТЬ МАТЕРИАЛ';
   document.querySelector('.modal__btn').value = "ИЗМЕНИТЬ";
+  document.querySelector('.modal__form').action = "/edit_post";
   document.querySelector('.modal__input-name').value = parent.querySelector('.board__title').textContent.trim();
   document.querySelector('.modal__textarea').value = parent.querySelector('.board__text').textContent.trim();
   modal.style.display = 'block';
@@ -76,7 +77,6 @@ function openModalChange(e) {
   document.querySelector('.modal__btn').addEventListener('click', changeCell);
 
   function changeCell(e) {
-    e.preventDefault();
     let name = document.querySelector('.modal__input-name').value;
     let text = document.querySelector('.modal__textarea').value;
     if (name === '' || text === '') {
