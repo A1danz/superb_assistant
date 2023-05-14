@@ -17,7 +17,8 @@
         <div class="container">
           <div class="lessonedit__container">
 
-            <form class="lessonedit__form" action="">
+            <form class="lessonedit__form" action="" method="post">
+              {% csrf_token %}
               <div class="lessonedit__top">
                 <input type="text" class="lessonedit__input input" placeholder="дата" name="date">
                 <h4 class="lessonedit__title">{{ lesson_name }}</h4>
@@ -26,30 +27,31 @@
                 {% for student in group %}
                 <div class="lessonedit__item">
                   <div class="lessonedit__name">{{ student.user.first_name }} {{ student.user.last_name }}</div>
-                  <input class="lessonedit__radio" type="radio" name="status2" value="student" checked
-                         id="status21">
-                  <label for="status21" class="lessonedit__box">
+                  <input class="lessonedit__radio" type="radio" name="status2*{{student.user.id}}" value="be"
+                         id="status21*{{student.user.id}}">
+                  <label for="status21*{{student.user.id}}" class="lessonedit__box">
                     присуствовал
                   </label>
-                  <input class="lessonedit__radio" type="radio" name="status2" value="student"
-                         id="status22">
-                  <label for="status22" class="lessonedit__box">
+                  <input class="lessonedit__radio" type="radio" name="status2*{{student.user.id}}" value="ill"
+                         id="status22*{{student.user.id}}">
+                  <label for="status22*{{student.user.id}}" class="lessonedit__box">
                     болел
                   </label>
-                  <input class="lessonedit__radio" type="radio" name="status2" value="student"
-                         id="status23">
-                  <label for="status23" class="lessonedit__box">
+                  <input class="lessonedit__radio" type="radio" name="status2*{{student.user.id}}" value="vr"
+                         id="status23*{{student.user.id}}">
+                  <label for="status23*{{student.user.id}}" class="lessonedit__box">
                     уважительная
                   </label>
-                  <input class="lessonedit__radio" type="radio" name="status2" value="student"
-                         id="status24">
-                  <label for="status24" class="lessonedit__box">
+                  <input class="lessonedit__radio" type="radio" name="status2*{{student.user.id}}" value="abs"
+                         id="status24*{{student.user.id}}">
+                  <label for="status24*{{student.user.id}}" class="lessonedit__box">
                     не был
                   </label>
                 </div>
                 {% endfor %}
               </div>
-              <input class="btn modal__btn" type="submit" value="СОХРАНИТЬ">
+
+              <input class="btn modal__btn" name='submit' type="submit" value="СОХРАНИТЬ">
             </form>
           </div>
         </div>

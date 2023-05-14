@@ -245,6 +245,18 @@ def lesson_edit(request):
         'group': group,
         'lesson_name': request.session.get('lesson_name')
     }
+    if request.method == 'POST':
+        for key in request.POST.keys():
+            if key.find("*") != -1:
+                student = Student.objects.get(user=User.objects.get(pk=key.split("*")[-1]))
+                log = AttendanceLog.objects.create(status=request.POST.get(key),
+                                             date=request.POST.get("date"), lesson=request.session.get('lesson_name'),
+                                             room=cur_student.room)
+                log.students.add(student)
+                log.save()
+        if request.POST.get('submit'):
+            return redirect('log')
+
     return render(request, "main/lesson_edit.html", context=contex)
 
 
