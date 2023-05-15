@@ -24,7 +24,7 @@
         <form class="sign__form" method="post">
           {% csrf_token %}
           {% if errors %}
-            <h3 class="sign__title">{{ errors }}</h3>
+            <h3 class="profile__group-text">{{ errors }}</h3>
           {% endif %}
           <input type="text" class="input" name="username" placeholder="имя пользователя">
           <input type="text" class="input" name="name" placeholder="имя">

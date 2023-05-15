@@ -24,6 +24,7 @@
               </p>
               {% if perm %}
               <form class="board__btns" method="post">
+                {% csrf_token %}
                 <button name="change" class="mini-btn btn-change">ИЗМЕНИТЬ</button>
                 <button name="delete {{ elem.id }}" class="mini-btn btn-cancel">
                   УДАЛИТЬ

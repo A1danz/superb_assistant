@@ -20,7 +20,7 @@
             <form class="lessonedit__form" action="" method="post">
               {% csrf_token %}
               <div class="lessonedit__top">
-                <input type="text" class="lessonedit__input input" placeholder="дата" name="date">
+                <input type="text" class="lessonedit__input input" placeholder="гггг-мм-дд" name="date">
                 <h4 class="lessonedit__title">{{ lesson_name }}</h4>
               </div>
               <div class="lessonedit__list">
@@ -52,6 +52,9 @@
               </div>
 
               <input class="btn modal__btn" name='submit' type="submit" value="СОХРАНИТЬ">
+              {% if errors %}
+            <h3 class="profile__group-text">{{ errors }}</h3>
+              {% endif %}
             </form>
           </div>
         </div>

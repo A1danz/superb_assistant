@@ -34,22 +34,20 @@
                     </div>
                     {% for student in group %}
                       {% for status, people in list_by_status.items %}
-                        {% for person in people %}
-                          {% if person == student %}
-                              {% if status == 'vr' %}
-                                <div class="lesson__cell lesson__dear">УВ</div>
-                              {% endif %}
-                              {% if status == 'ill' %}
-                                <div class="lesson__cell lesson__wasnt">Б</div>
-                              {% endif %}
-                              {% if status == 'abs' %}
-                                <div class="lesson__cell lesson__sick">Н</div>
-                              {% endif %}
-                              {% if status == 'be' %}
-                                <div class="lesson__cell"></div>
-                              {% endif %}
+                        {% if student in people %}
+                          {% if status == 'vr' %}
+                            <div class="lesson__cell lesson__dear">УВ</div>
                           {% endif %}
-                        {% endfor %}
+                          {% if status == 'ill' %}
+                            <div class="lesson__cell lesson__wasnt">Б</div>
+                          {% endif %}
+                          {% if status == 'abs' %}
+                            <div class="lesson__cell lesson__sick">Н</div>
+                          {% endif %}
+                          {% if status == 'be' %}
+                            <div class="lesson__cell"></div>
+                          {% endif %}
+                          {% endif %}
                       {% endfor %}
                     {% endfor %}
                   </div>

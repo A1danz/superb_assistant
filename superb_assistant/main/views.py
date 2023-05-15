@@ -1,4 +1,4 @@
-import re
+from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -96,7 +96,6 @@ def signup(request):
 
 @login_required()
 def index(request):
-    print(request.user)
     if request.method == "POST":
         print("board post-requets")
         print("board post-requets")
@@ -220,13 +219,13 @@ def lesson(request):
     dates_iterator = data.values_list('date').iterator()
     dates = set(i for i in dates_iterator)
     list_of_students_by_date = {}
-
     for i in dates:
         temp = data.filter(date=i[0])
         list_by_status = {}
         for j in temp:
             list_by_status[j.status] = j.students.all()
         list_of_students_by_date[i] = list_by_status
+
 
     contex = {
         'perm': get_perm(cur_student.permission),
@@ -246,16 +245,34 @@ def lesson_edit(request):
         'lesson_name': request.session.get('lesson_name')
     }
     if request.method == 'POST':
+        dict = defaultdict(list)
+        # TODO: нельзя сохранять два раза одну и ту же дату/перезаписывать
+        k = 0
         for key in request.POST.keys():
             if key.find("*") != -1:
+                k += 1
                 student = Student.objects.get(user=User.objects.get(pk=key.split("*")[-1]))
-                log = AttendanceLog.objects.create(status=request.POST.get(key),
-                                             date=request.POST.get("date"), lesson=request.session.get('lesson_name'),
-                                             room=cur_student.room)
-                log.students.add(student)
-                log.save()
-        if request.POST.get('submit'):
-            return redirect('log')
+                dict[request.POST.get(key)].append(student)
+        if len(group) == k:
+            for key in dict.keys():
+                if dict[key]:
+                    if request.POST.get("date"):
+                        log = AttendanceLog.objects.create(status=key,
+                                                       date=request.POST.get("date"),
+                                                       lesson=request.session.get('lesson_name'),
+                                                       room=cur_student.room)
+                    else:
+                        log = AttendanceLog.objects.create(status=key,
+                                                           lesson=request.session.get('lesson_name'),
+                                                           room=cur_student.room)
+                    for i in dict[key]:
+                        log.students.add(i)
+                    log.save()
+            if request.POST.get('submit'):
+                        return redirect('lesson')
+        else:
+            contex['errors'] = "Отметьте всех студентов"
+
 
     return render(request, "main/lesson_edit.html", context=contex)
 
