@@ -253,14 +253,16 @@ def lesson_edit(request):
                 k += 1
                 student = Student.objects.get(user=User.objects.get(pk=key.split("*")[-1]))
                 dict[request.POST.get(key)].append(student)
+
         if len(group) == k:
+            today = date.today()
+            if request.POST.get("date"):
+                today = request.POST.get("date")
+            temp = AttendanceLog.objects.filter(date=today, room=cur_student.room,
+                                                lesson=request.session.get('lesson_name'))
+            if temp.exists():
+                temp.delete()
             for key in dict.keys():
-                today = date.today()
-                if request.POST.get("date"):
-                    today = request.POST.get("date")
-                temp = AttendanceLog.objects.filter(date=today, room=cur_student.room, lesson=request.session.get('lesson_name'))
-                if temp.exists():
-                    temp.delete()
                 log = AttendanceLog.objects.create(status=key,
                                                    date=today,
                                                    lesson=request.session.get('lesson_name'),
