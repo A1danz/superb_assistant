@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -246,7 +247,6 @@ def lesson_edit(request):
     }
     if request.method == 'POST':
         dict = defaultdict(list)
-        # TODO: нельзя сохранять два раза одну и ту же дату/перезаписывать
         k = 0
         for key in request.POST.keys():
             if key.find("*") != -1:
@@ -255,21 +255,22 @@ def lesson_edit(request):
                 dict[request.POST.get(key)].append(student)
         if len(group) == k:
             for key in dict.keys():
-                if dict[key]:
-                    if request.POST.get("date"):
-                        log = AttendanceLog.objects.create(status=key,
-                                                       date=request.POST.get("date"),
-                                                       lesson=request.session.get('lesson_name'),
-                                                       room=cur_student.room)
-                    else:
-                        log = AttendanceLog.objects.create(status=key,
-                                                           lesson=request.session.get('lesson_name'),
-                                                           room=cur_student.room)
-                    for i in dict[key]:
-                        log.students.add(i)
-                    log.save()
+                today = date.today()
+                if request.POST.get("date"):
+                    today = request.POST.get("date")
+                temp = AttendanceLog.objects.filter(date=today, room=cur_student.room, lesson=request.session.get('lesson_name'))
+                if temp.exists():
+                    temp.delete()
+                log = AttendanceLog.objects.create(status=key,
+                                                   date=today,
+                                                   lesson=request.session.get('lesson_name'),
+                                                   room=cur_student.room)
+                for i in dict[key]:
+                    log.students.add(i)
+                log.save()
+
             if request.POST.get('submit'):
-                        return redirect('lesson')
+                return redirect('lesson')
         else:
             contex['errors'] = "Отметьте всех студентов"
 
