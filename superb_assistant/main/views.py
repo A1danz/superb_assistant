@@ -218,7 +218,7 @@ def lesson(request):
     group = Student.objects.filter(room=cur_student.room)
     data = AttendanceLog.objects.filter(room=cur_student.room, lesson=cur_lesson)
     dates_iterator = data.values_list('date').iterator()
-    dates = set(i for i in dates_iterator)
+    dates = sorted(set(i for i in dates_iterator))
     list_of_students_by_date = {}
     for i in dates:
         temp = data.filter(date=i[0])
@@ -262,6 +262,7 @@ def lesson_edit(request):
                                                 lesson=request.session.get('lesson_name'))
             if temp.exists():
                 temp.delete()
+
             for key in dict.keys():
                 log = AttendanceLog.objects.create(status=key,
                                                    date=today,
