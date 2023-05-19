@@ -25,9 +25,10 @@
               {% if perm %}
               <div class="board__btns">
                 <button class="mini-btn btn-change" data-id="{{ elem.id }}" name="change">ИЗМЕНИТЬ</button>
-                <form action="delete_post">
+                <form action="/delete_post" method="post">
+                  {% csrf_token %}
                   <input type="hidden" name="id" value="{{ elem.id }}">
-                  <button class="mini-btn btn-cancel" data-id="{{ elem.id }}">УДАЛИТЬ</button>
+                  <input type="submit" class="mini-btn btn-cancel" data-id="{{ elem.id }}" value="УДАЛИТЬ">
                 </form>
               </div>
               {% endif %}

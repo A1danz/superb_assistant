@@ -399,4 +399,10 @@ def edit_post(request):
             title = post_data['title']
             text = post_data['text']
             Post.objects.filter(id=post_data["id"]).update(text=text, title=title)
-            return redirect('index')
+    return redirect('index')
+
+def delete_post(request):
+    if request.method == "POST":
+        obj = Post.objects.filter(id=request.POST["id"])
+        obj.delete()
+    return redirect('index')

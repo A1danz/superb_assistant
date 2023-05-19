@@ -95,18 +95,6 @@ function openModalChange(e) {
   }
 }
 
-let btnCancel = document.querySelectorAll('.btn-cancel')
-btnCancel.forEach((btn) => {
-  btn.addEventListener('click', deleteCell);
-})
-
-function deleteCell(e) {
-  let parent = e.target.closest('.board__cell');
-  notify('объявление удалено');
-  parent.remove();
-}
-
-
 function close() {
   document.querySelector('.modal__overlay').classList.remove('animate__fadeIn');
   document.querySelector('.modal__content').classList.remove('animate__backInDown');
