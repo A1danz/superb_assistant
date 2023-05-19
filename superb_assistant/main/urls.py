@@ -15,4 +15,5 @@ urlpatterns = [
     path('lesson_edit', views.lesson_edit, name='lesson_edit'),
     path('materials/<int:video_id>', views.download_material, name='download_material'),
     path('add_post', views.add_post, name='add_post'),
+    path('edit_post', views.edit_post, name='edit_post')
 ]

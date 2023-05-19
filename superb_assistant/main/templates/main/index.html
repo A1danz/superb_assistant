@@ -23,13 +23,13 @@
                   {{ elem.text }}
               </p>
               {% if perm %}
-              <form class="board__btns" method="post">
-                {% csrf_token %}
-                <button name="change" class="mini-btn btn-change">ИЗМЕНИТЬ</button>
-                <button name="delete {{ elem.id }}" class="mini-btn btn-cancel">
-                  УДАЛИТЬ
-                </button>
-              </form>
+              <div class="board__btns">
+                <button class="mini-btn btn-change" data-id="{{ elem.id }}" name="change">ИЗМЕНИТЬ</button>
+                <form action="delete_post">
+                  <input type="hidden" name="id" value="{{ elem.id }}">
+                  <button class="mini-btn btn-cancel" data-id="{{ elem.id }}">УДАЛИТЬ</button>
+                </form>
+              </div>
               {% endif %}
             </div>
             {% endfor %}
@@ -45,6 +45,7 @@
     </h4>
     <form class="modal__form" action="" method="post">
       {% csrf_token %}
+      <input type="hidden" name="id" class="input__hidden" value="">
       <input name="title" type="text" class="modal__input modal__input-name input" placeholder="название материала">
       <textarea name="text" class="modal__textarea input" placeholder="описание объявления"></textarea>
       <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">

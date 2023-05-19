@@ -232,7 +232,8 @@ def lesson(request):
         'perm': get_perm(cur_student.permission),
         'group': group,
         'lesson_name': cur_lesson,
-        'data_by_date': list_of_students_by_date
+        'data_by_date': list_of_students_by_date,
+        'navbar': 'lesson'
     }
     return render(request, "main/lesson.html", context=contex)
 
@@ -386,3 +387,16 @@ def add_post(request):
             return redirect('index')
     else:
         return redirect('index')
+
+
+def edit_post(request):
+    if request.method == "POST":
+        print(request.POST)
+        post_data = request.POST.dict()
+        post_data["room"] = get_student(request).room
+        form = PostForm(post_data)
+        if form.is_valid():
+            title = post_data['title']
+            text = post_data['text']
+            Post.objects.filter(id=post_data["id"]).update(text=text, title=title)
+            return redirect('index')

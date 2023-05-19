@@ -2,12 +2,11 @@ let $btn = document.querySelector('.btn-modal');
 let modal = document.querySelector('.modal');
 $btn.addEventListener('click', openModal);
 
-
-
 function openModal() {
   document.querySelector('.modal__title').textContent = 'НОВОЕ ОБЪЯВЛЕНИЕ';
   document.querySelector('.modal__btn').value = "ДОБАВИТЬ";
   document.querySelector('.modal__form').action = "/add_post";
+  document.querySelector('.input__hidden').value = "";
   document.querySelector('.modal__input-name').value = '';
   document.querySelector('.modal__textarea').value = '';
   modal.style.display = 'block';
@@ -71,12 +70,12 @@ function openModalChange(e) {
   document.querySelector('.modal__title').textContent = 'ИЗМЕНИТЬ МАТЕРИАЛ';
   document.querySelector('.modal__btn').value = "ИЗМЕНИТЬ";
   document.querySelector('.modal__form').action = "/edit_post";
+  document.querySelector('.input__hidden').value = e.target.dataset.id;
   document.querySelector('.modal__input-name').value = parent.querySelector('.board__title').textContent.trim();
   document.querySelector('.modal__textarea').value = parent.querySelector('.board__text').textContent.trim();
   modal.style.display = 'block';
   document.querySelector('body').style.overflowY = 'hidden';
 
-  add_csrf_token();
 
   document.querySelector('.modal__btn').addEventListener('click', changeCell);
 
@@ -131,14 +130,4 @@ function notify(string) {
   setTimeout(() => {
     notification.style.transform = ''
   }, 2000)
-}
-
-
-function add_csrf_token() {
-  var form = document.getElementByClass('modal__form'); // замените 'form-id' на идентификатор вашей формы
-  var csrf_token = document.createElement('input');
-  csrf_token.type = 'hidden';
-  csrf_token.name = 'csrfmiddlewaretoken'; // имя поля с CSRF-токеном должно быть 'csrfmiddlewaretoken'
-  csrf_token.value = '{% csrf_token %}'; // значение CSRF-токена из контекста Django
-  form.appendChild(csrf_token);
 }

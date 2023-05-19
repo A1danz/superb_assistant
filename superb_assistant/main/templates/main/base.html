@@ -24,7 +24,7 @@
       <header class="header">
         <div class="container">
           <div class="header__container">
-          <a href="{% url 'log' %}" class="header__link {% if navbar == 'log' %} header__selected {% endif %}">Журнал посещаемости</a>
+          <a href="{% url 'log' %}" class="header__link {% if navbar == 'log' or navbar == 'lesson' %} header__selected {% endif %}">Журнал посещаемости</a>
           <a href="{% url 'index' %}" class="header__link {% if navbar == 'index' %} header__selected {% endif %}">Доска объявлений</a>
           <a href="{% url 'timetable' %}" class="header__link {% if navbar == 'timetable' %} header__selected {% endif %}">Расписание</a>
           <a href="{% url 'materials' %}" class="header__link {% if navbar == 'materials' %} header__selected {% endif %}">Учебные материалы</a>
