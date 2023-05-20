@@ -19,8 +19,12 @@
               </div>
                 {% if perm %}
               <div class="contact__btns">
-                <button class="mini-btn btn-change">ИЗМЕНИТЬ</button>
-                <button class="mini-btn btn-cancel">УДАЛИТЬ</button>
+                <button class="mini-btn btn-change" data-id="{{ elem.id }}">ИЗМЕНИТЬ</button>
+                <form action="contacts/delete_data" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ elem.id }}">
+                    <input type="submit" class="mini-btn btn-cancel" data-id="{{ elem.id }}" value="УДАЛИТЬ">
+                </form>
               </div>
                 {% endif %}
             </div>
@@ -39,10 +43,12 @@
           <h4 class="modal__title">
             НОВЫЙ КОНТАКТ
           </h4>
-          <form class="modal__form" action="">
-            <input type="text" class="modal__input modal__input-name input" placeholder="имя преподавателя">
-            <input type="text" class="modal__input modal__lesson input" placeholder="предмет">
-            <input type="text" class="modal__input modal__contact input" placeholder="контакт">
+          <form class="modal__form" action="contacts/add_data" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" class="input__hidden" value="">
+            <input type="text" name="teacher" class="modal__input modal__input-name input" placeholder="имя преподавателя">
+            <input type="text" name="lesson" class="modal__input modal__lesson input" placeholder="предмет">
+            <input type="text" name="contact" class="modal__input modal__contact input" placeholder="контакт">
             <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
           </form>
           <i class="modal__icon uil uil-times"></i>

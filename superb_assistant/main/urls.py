@@ -14,7 +14,15 @@ urlpatterns = [
     path('lesson', views.lesson, name='lesson'),
     path('lesson_edit', views.lesson_edit, name='lesson_edit'),
     path('materials/<int:video_id>', views.download_material, name='download_material'),
-    path('add_post', views.add_post, name='add_post'),
-    path('edit_post', views.edit_post, name='edit_post'),
-    path('delete_post', views.delete_post, name='delete_post')
+    path('add_data', views.add_data, name='add_data'),
+    path('edit_data', views.edit_data, name='edit_data'),
+    path('delete_data', views.delete_data, name='delete_data'),
+    path('materials/add_data', views.add_data, name='add_data'),
+    path('materials/edit_data', views.edit_data, name='edit_data'),
+    path('materials/delete_data', views.delete_data, name='delete_data'),
+    path('contacts/add_data', views.add_data, name='add_data'),
+    path('contacts/edit_data', views.edit_data, name='edit_data'),
+    path('contacts/delete_data', views.delete_data, name='delete_data'),
+
+
 ]

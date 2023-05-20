@@ -11,7 +11,7 @@ from django.template.defaulttags import register
 from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, FileResponse
-from .forms import Loginform, LessonForm, PostForm
+from .forms import *
 
 
 def signin(request):
@@ -375,34 +375,81 @@ def create_schedule(room):
             Lesson.objects.create(day=i, start_time=time[0], end_time=time[1], schedule=room, num=k)
             k = k + 1
 
-def add_post(request):
-    print("hi")
+@login_required()
+def add_data(request):
+    data_name = request.get_full_path().split('/')[-2]
+    print(data_name)
+    print(request.get_full_path())
     if request.method == "POST":
         post_data = request.POST.dict()
         post_data["room"] = get_student(request).room
+        model = get_model_form_by_name(data_name)
+        form = model(post_data)
+        print(contacts, " - ", model)
+        json_data = form.errors.get_json_data()
         print(post_data)
-        form = PostForm(post_data)
+        print(json_data)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect(get_path(data_name))
     else:
-        return redirect('index')
+        return redirect(get_path(data_name))
 
 
-def edit_post(request):
+@login_required()
+def edit_data(request):
+    data_name = request.get_full_path().split('/')[-2]
     if request.method == "POST":
         print(request.POST)
         post_data = request.POST.dict()
         post_data["room"] = get_student(request).room
-        form = PostForm(post_data)
+        model = get_model_form_by_name(data_name)
+        form = model(post_data)
         if form.is_valid():
-            title = post_data['title']
-            text = post_data['text']
-            Post.objects.filter(id=post_data["id"]).update(text=text, title=title)
-    return redirect('index')
+            if model == PostForm:
+                title = post_data['title']
+                text = post_data['text']
+                Post.objects.filter(id=post_data["id"]).update(text=text, title=title)
+            elif model == ContactForm:
+                lesson = post_data['lesson']
+                teacher = post_data['teacher']
+                contact = post_data['contact']
+                Contact.objects.filter(id=post_data['id']).update(lesson=lesson, teacher=teacher, contact=contact)
+            elif model == StudyMaterialForm:
+                name = post_data['name']
+                file = post_data['file']
+                StudyMaterial.objects.filter(id=post_data['id']).update(name=name, file=file)
+    return redirect(get_path(data_name))
 
-def delete_post(request):
+@login_required()
+def delete_data(request):
+    data_name = request.get_full_path().split('/')[-2]
+    print(data_name)
     if request.method == "POST":
-        obj = Post.objects.filter(id=request.POST["id"])
+        if data_name == '':
+            model = Post
+        elif data_name == 'contacts':
+            model = Contact
+        elif data_name == 'materials':
+            model = StudyMaterial
+
+        obj = model.objects.filter(id=request.POST["id"])
         obj.delete()
-    return redirect('index')
+    return redirect(get_path(data_name))
+
+
+def get_model_form_by_name(data_name):
+    if data_name == '':
+        return PostForm
+    elif data_name == 'contacts':
+        return ContactForm
+    elif data_name == 'materials':
+        return StudyMaterialForm
+
+def get_path(data_name):
+    if data_name == '':
+        return 'index'
+    elif data_name == 'contacts':
+        return 'contacts'
+    elif data_name == 'materials':
+        return 'materials'

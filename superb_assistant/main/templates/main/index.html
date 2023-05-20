@@ -25,7 +25,7 @@
               {% if perm %}
               <div class="board__btns">
                 <button class="mini-btn btn-change" data-id="{{ elem.id }}" name="change">ИЗМЕНИТЬ</button>
-                <form action="/delete_post" method="post">
+                <form action="/delete_data" method="post">
                   {% csrf_token %}
                   <input type="hidden" name="id" value="{{ elem.id }}">
                   <input type="submit" class="mini-btn btn-cancel" data-id="{{ elem.id }}" value="УДАЛИТЬ">
@@ -44,7 +44,7 @@
     <h4 class="modal__title">
       НОВЫЙ МАТЕРИАЛ
     </h4>
-    <form class="modal__form" action="" method="post">
+    <form class="modal__form" action="/add_data" method="post">
       {% csrf_token %}
       <input type="hidden" name="id" class="input__hidden" value="">
       <input name="title" type="text" class="modal__input modal__input-name input" placeholder="название материала">
