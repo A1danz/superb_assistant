@@ -222,7 +222,6 @@ def lesson(request):
             list_by_status[j.status] = j.students.all()
         list_of_students_by_date[i] = list_by_status
 
-
     contex = {
         'perm': get_perm(cur_student.permission),
         'group': get_group(cur_student),
@@ -230,15 +229,28 @@ def lesson(request):
         'data_by_date': list_of_students_by_date,
         'navbar': 'lesson'
     }
+    if 'date' in request.session:
+        del request.session['date']
+    for i in request.POST.keys():
+        if i.find("*") != -1:
+            date = i.split("*")[-1]
+            request.session['date'] = datetime.datetime.strptime(date, "%B %d, %Y").strftime("%Y-%m-%d")
+            return redirect("lesson_edit")
+    if request.POST.get('delete'):
+        temp = AttendanceLog.objects.filter(room=cur_student.room,
+                                            lesson=request.session.get('lesson_name'))
+        if temp.exists():
+            temp.delete()
+        return redirect("lesson")
     return render(request, "main/lesson.html", context=contex)
-
 
 @login_required()
 def lesson_edit(request):
     cur_student = get_student(request)
     contex = {
         'group': get_group(cur_student),
-        'lesson_name': request.session.get('lesson_name')
+        'lesson_name': request.session.get('lesson_name'),
+        'date' : request.session.get('date')
     }
     if request.method == 'POST':
         dict = defaultdict(list)
@@ -256,7 +268,6 @@ def lesson_edit(request):
                                             lesson=request.session.get('lesson_name'))
         if temp.exists():
             temp.delete()
-
         for key in dict.keys():
             log = AttendanceLog.objects.create(status=key,
                                                date=today,
@@ -265,17 +276,29 @@ def lesson_edit(request):
             for i in dict[key]:
                 log.students.add(i)
             log.save()
-
         if request.POST.get('submit'):
             return redirect('lesson')
-
-
     return render(request, "main/lesson_edit.html", context=contex)
 
 
 @login_required()
 def profile(request):
     cur_student = get_student(request)
+    STATUS = {
+        0: 'студент',
+        1: 'заместитель старосты',
+        2: 'староста'
+    }
+    room_name = cur_student.room.name
+    contex = {
+        'navbar': 'profile',
+        'cur_student': cur_student,
+        'perm': cur_student.permission,
+        'status': STATUS.get(cur_student.permission),
+        'group': get_group(cur_student),
+        'room_name': room_name,
+        'STATUS': STATUS
+    }
     if request.method == 'POST':
         if request.POST.get('exit'):
             request.session.clear()
@@ -293,7 +316,24 @@ def profile(request):
             room.save()
         if request.user.check_password(request.POST.get('pass', False)):
             if request.POST['password1'] == request.POST['password2']:
-                request.user.set_password(request.POST['password1'])
+                if len(request.POST['password1']) < 8:
+                    contex['errors'] = "пароль должен состоять хотя бы из 8 символов"
+                else:
+                    hasnum = False
+                    haslet = False
+                    for i in request.POST['password1']:
+                        if i.isdigit():
+                            hasnum = True
+                        if i.isalpha():
+                            haslet = True
+                    if hasnum and haslet:
+                        request.user.set_password(request.POST['password1'])
+                    else:
+                        contex['errors'] = 'Пароль должен содержать буквы и цифры'
+            else:
+                contex['errors'] = "Введенные пароли не совпадают"
+        else:
+            contex['errors'] = "Текущий пароль не верный"
         request.user.save()
         for key in request.POST.keys():
             if 'del' in key:
@@ -307,21 +347,7 @@ def profile(request):
                 student.permission = 1
                 student.save()
 
-    STATUS = {
-        0: 'студент',
-        1: 'заместитель старосты',
-        2: 'староста'
-    }
-    room_name = cur_student.room.name
-    contex = {
-        'navbar': 'profile',
-        'cur_student': cur_student,
-        'perm': cur_student.permission,
-        'status': STATUS.get(cur_student.permission),
-        'group': get_group(cur_student),
-        'room_name': room_name,
-        'STATUS': STATUS
-    }
+
     return render(request, "main/profile.html", context=contex)
 
 

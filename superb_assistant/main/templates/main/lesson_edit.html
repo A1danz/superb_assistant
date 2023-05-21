@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
     <link rel="icon" href="{% static 'main/css/favicon.ico' %}">
-    <title>Алгем</title>
+    <title>{{lesson_name}}</title>
   </head>
   <body>
     <div class="wrapper">
@@ -20,7 +20,11 @@
             <form class="lessonedit__form" action="" method="post">
               {% csrf_token %}
               <div class="lessonedit__top">
+                {% if date %}
+                <input type="text" class="lessonedit__input input" placeholder="гггг-мм-дд" value="{{date}}" name="date">
+                {% else %}
                 <input type="text" class="lessonedit__input input" placeholder="гггг-мм-дд" name="date">
+                {% endif %}
                 <h4 class="lessonedit__title">{{ lesson_name }}</h4>
               </div>
               <div class="lessonedit__list">

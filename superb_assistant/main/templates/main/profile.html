@@ -30,6 +30,9 @@
         </h4>
         <form class="profile__form" action="" method="post">
           {% csrf_token %}
+          {% if errors %}
+            <h3 class="profile__group-text">{{ errors }}</h3>
+          {% endif %}
           <div class="profile__new-password">
             <label class="password__label" name="password">
               <input type="password" class="input password profile__password" name='password1' placeholder="новый пароль">

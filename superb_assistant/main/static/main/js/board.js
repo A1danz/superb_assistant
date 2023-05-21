@@ -5,7 +5,7 @@ $btn.addEventListener('click', openModal);
 function openModal() {
   document.querySelector('.modal__title').textContent = 'НОВОЕ ОБЪЯВЛЕНИЕ';
   document.querySelector('.modal__btn').value = "ДОБАВИТЬ";
-  document.querySelector('.modal__form').action = "contacts/add_data";
+  document.querySelector('.modal__form').action = "/add_data";
   document.querySelector('.input__hidden').value = "";
   document.querySelector('.modal__input-name').value = '';
   document.querySelector('.modal__textarea').value = '';
