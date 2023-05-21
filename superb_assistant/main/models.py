@@ -6,9 +6,6 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-
-
-
 # генерируем случайную строку
 def rand():
     return ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(10))
@@ -16,7 +13,7 @@ def rand():
 
 class Room(models.Model):
     code = models.CharField(max_length=10, default=rand, primary_key=True)
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=10, blank=True)
 
     def __unicode__(self):
         return self.pk
@@ -36,12 +33,13 @@ class Student(models.Model):
         (HEADMAN, 'Староста')
     ]
 
-    IS_APPPROVED = 2
-    WAITING = 1
-    NOT_APPPROVED = 0
+    WAITING = 0
+    IS_APPPROVED = 1
+    NOT_APPPROVED = 2
+
     STATE =[
-        (IS_APPPROVED, 'Одобрено'),
         (WAITING, "Ожидание"),
+        (IS_APPPROVED, 'Одобрено'),
         (NOT_APPPROVED, "Не одобрено")
     ]
     permission = models.SmallIntegerField(choices=PERMISSION, default=SIMPLE_STUDENT)
@@ -50,7 +48,10 @@ class Student(models.Model):
     state = models.SmallIntegerField(choices=STATE, default=WAITING)
 
     def __str__(self):
-        return self.user.__str__()
+        return f'{self.state}: {self.user.__str__()}'
+
+    class Meta:
+        ordering = ['state']
 
 
 class Post(models.Model):

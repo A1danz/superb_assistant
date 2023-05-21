@@ -26,6 +26,9 @@
           {% if errors %}
             <h3 class="profile__group-text">{{ errors }}</h3>
           {% endif %}
+          {% if info %}
+          <h3 class="profile__group-text">{{ info }}</h3>
+          {% endif %}
           <input type="text" class="input" name="username" placeholder="имя пользователя">
           <input type="text" class="input" name="name" placeholder="имя">
           <input type="text" class="input" name="surname" placeholder="фамилия">
@@ -50,6 +53,7 @@
           </div>
           <input type="text" class="input input__code" name="roomnum" placeholder="код группы" >
           <input type="submit" class="btn modal__btn" value="ЗАРЕГИСТРИРОВАТЬСЯ">
+
         </form>
       </div>
     </div>

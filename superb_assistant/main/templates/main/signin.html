@@ -14,15 +14,20 @@
   <body>
     <div class="sign">
       <div class="sign__wrapper">
-        {% if form.errors %}
-        <h3 class="sign__title">Форма заполнена неверно. Проверьте ее правильность.</h3>
+        {% if state %}
+          <h3 class="profile__group-text">{{ state }}</h3>
         {% else %}
-        {% if error %}
-        <h3 class="profile__group-text">{{ error }}</h3>
-        {% else %}
-        <h3 class="sign__title">Пожалуйста, введите логин и пароль</h3>
+          {% if form.errors %}
+            <h3 class="profile__group-text">Форма заполнена неверно. Проверьте ее правильность.</h3>
+          {% else %}
+            {% if error %}
+            <h3 class="profile__group-text">{{ error }}</h3>
+            {% else %}
+            <h3 class="profile__group-text">Пожалуйста, введите логин и пароль</h3>
+            {% endif %}
+          {% endif %}
         {% endif %}
-        {% endif %}
+
         <div class="sign__nav">
           <a href="../signin" class="sign__link-in">ВОЙТИ</a>
           <a href="../signup" class="sign__link-up">РЕГИСТРАЦИЯ</a>

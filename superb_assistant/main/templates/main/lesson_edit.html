@@ -28,7 +28,7 @@
                 <div class="lessonedit__item">
                   <div class="lessonedit__name">{{ student.user.first_name }} {{ student.user.last_name }}</div>
                   <input class="lessonedit__radio" type="radio" name="status2*{{student.user.id}}" value="be"
-                         id="status21*{{student.user.id}}">
+                         id="status21*{{student.user.id}}" checked>
                   <label for="status21*{{student.user.id}}" class="lessonedit__box">
                     присуствовал
                   </label>
@@ -52,9 +52,7 @@
               </div>
 
               <input class="btn modal__btn" name='submit' type="submit" value="СОХРАНИТЬ">
-              {% if errors %}
-            <h3 class="profile__group-text">{{ errors }}</h3>
-              {% endif %}
+
             </form>
           </div>
         </div>

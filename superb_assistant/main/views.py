@@ -18,26 +18,31 @@ def signin(request):
     if request.user.is_authenticated:
         return redirect('index')
     if request.method == 'POST':
-        uservalue = ''
-        passwordvalue = ''
         form = Loginform(request.POST or None)
+
         if form.is_valid():
             uservalue = form.cleaned_data.get("username")
             passwordvalue = form.cleaned_data.get("password")
 
             user = authenticate(username=uservalue, password=passwordvalue)
-            if user is not None:
-                login(request, user)
-                return redirect('profile')
-                # return render(request, 'main/profile.html')
-            else:
-                context = {'form': form,
-                           'error': 'Логин или пароль неверны'}
-                return render(request, 'main/signin.html', context)
+            context = {'form': form,
+                        'error': 'Логин или пароль неверны'}
+            if user is not None and Student.objects.filter(user=user).exists():
+                cur_student = Student.objects.get(user=user)
+                if cur_student.state == 1:
+                    login(request, user)
+                    return redirect('profile')
+                elif cur_student.state == 2:
+                    context['state'] = 'Ваша заявка была отклонена. ' \
+                                       'Пожалуйста, попробуйте зарегестрироваться еще раз'
+                    cur_student.delete()
+                elif cur_student.state == 0:
+                    context['state'] = 'Ваша заявка находится на рассмотрении'
+
+            return render(request, 'main/signin.html', context)
 
         else:
             json_data = form.errors.get_json_data()
-            print(json_data)
             context = {'form': form}
             context['username_error'] = ''
             context['password_error'] = ''
@@ -61,11 +66,16 @@ def signup(request):
             new_user.last_name = request.POST['surname']
             if request.POST['role'] == 'warden':
                 new_user.save()
-                return HttpResponse("You have to wait")
+                room = Room.objects.create()
+                student = Student.objects.create(room=room, user=new_user, state=0, permission=2)
+                student.save()
+                info = 'Регистрация прошла успешно. ' \
+                       'Пожалуйста, подождите пока вашу заявку одобрят'
+                return render(request, 'main/signup.html', context={'info': info})
             else:
                 room = Room.objects.get(pk=request.POST['roomnum'])
                 new_user.save()
-                student = Student.objects.create(room=room, user=new_user, state=2)
+                student = Student.objects.create(room=room, user=new_user, state=1)
                 student.save()
                 return redirect('profile')
         else:
@@ -78,21 +88,12 @@ def signup(request):
                 context['errors'] = 'Пользователь с таким именем уже существует'
             elif 'password1' in json_data or 'password2' in json_data:
                 context[
-                    'errors'] = 'Введите корректные, совпадающие пароли! (сложный пароль, не похожий на логин, состоящий из букв, цифр и специальных символов, длиной не менее 8)'
+                    'errors'] = 'Введите корректные, совпадающие пароли' \
+                                '(сложный пароль, не похожий на логин,' \
+                                ' состоящий из букв, цифр и специальных символов, длиной не менее 8)'
             return render(request, "main/signup.html", context)
     else:
         return render(request, 'main/signup.html')
-
-
-#
-# @login_required()
-# class ShowPost(ListView):
-#     model = Post
-#     template_name = 'main/index.html'
-#     context_object_name = 'posts'
-#     c = get_student(request)
-#     def get_queryset(self):
-#         return Post.objects.filter(room=cur_student.room)
 
 
 @login_required()
@@ -102,11 +103,6 @@ def index(request):
         print("board post-requets")
     cur_student = get_student(request)
     posts = Post.objects.filter(room=cur_student.room).order_by('-time')
-    # if request.method == "POST":
-    #     print(request.POST)
-    #     for key in request.POST.keys():
-    #         if "delete" in key:
-    #             print(key)
 
     contex = {
         'posts': posts,
@@ -206,7 +202,7 @@ def log(request):
         'perm': get_perm(cur_student.permission),
         'log': log,
         'navbar': 'log',
-        'lessons': lessons
+        'lessons': sorted(lessons)
     }
     return render(request, "main/log.html", context=contex)
 
@@ -215,7 +211,6 @@ def log(request):
 def lesson(request):
     cur_student = get_student(request)
     cur_lesson = request.session.get('lesson_name')
-    group = Student.objects.filter(room=cur_student.room)
     data = AttendanceLog.objects.filter(room=cur_student.room, lesson=cur_lesson)
     dates_iterator = data.values_list('date').iterator()
     dates = sorted(set(i for i in dates_iterator))
@@ -230,7 +225,7 @@ def lesson(request):
 
     contex = {
         'perm': get_perm(cur_student.permission),
-        'group': group,
+        'group': get_group(cur_student),
         'lesson_name': cur_lesson,
         'data_by_date': list_of_students_by_date,
         'navbar': 'lesson'
@@ -241,9 +236,8 @@ def lesson(request):
 @login_required()
 def lesson_edit(request):
     cur_student = get_student(request)
-    group = Student.objects.filter(room=cur_student.room)
     contex = {
-        'group': group,
+        'group': get_group(cur_student),
         'lesson_name': request.session.get('lesson_name')
     }
     if request.method == 'POST':
@@ -255,28 +249,25 @@ def lesson_edit(request):
                 student = Student.objects.get(user=User.objects.get(pk=key.split("*")[-1]))
                 dict[request.POST.get(key)].append(student)
 
-        if len(group) == k:
-            today = date.today()
-            if request.POST.get("date"):
-                today = request.POST.get("date")
-            temp = AttendanceLog.objects.filter(date=today, room=cur_student.room,
-                                                lesson=request.session.get('lesson_name'))
-            if temp.exists():
-                temp.delete()
+        today = date.today()
+        if request.POST.get("date"):
+            today = request.POST.get("date")
+        temp = AttendanceLog.objects.filter(date=today, room=cur_student.room,
+                                            lesson=request.session.get('lesson_name'))
+        if temp.exists():
+            temp.delete()
 
-            for key in dict.keys():
-                log = AttendanceLog.objects.create(status=key,
-                                                   date=today,
-                                                   lesson=request.session.get('lesson_name'),
-                                                   room=cur_student.room)
-                for i in dict[key]:
-                    log.students.add(i)
-                log.save()
+        for key in dict.keys():
+            log = AttendanceLog.objects.create(status=key,
+                                               date=today,
+                                               lesson=request.session.get('lesson_name'),
+                                               room=cur_student.room)
+            for i in dict[key]:
+                log.students.add(i)
+            log.save()
 
-            if request.POST.get('submit'):
-                return redirect('lesson')
-        else:
-            contex['errors'] = "Отметьте всех студентов"
+        if request.POST.get('submit'):
+            return redirect('lesson')
 
 
     return render(request, "main/lesson_edit.html", context=contex)
@@ -321,18 +312,18 @@ def profile(request):
         1: 'заместитель старосты',
         2: 'староста'
     }
-    group = Student.objects.filter(room=cur_student.room)
     room_name = cur_student.room.name
     contex = {
         'navbar': 'profile',
         'cur_student': cur_student,
         'perm': cur_student.permission,
         'status': STATUS.get(cur_student.permission),
-        'group': group,
+        'group': get_group(cur_student),
         'room_name': room_name,
         'STATUS': STATUS
     }
     return render(request, "main/profile.html", context=contex)
+
 
 @register.filter
 def get_item(dict, key):
@@ -350,6 +341,12 @@ def download_material(request, video_id):
 
 def get_student(request):
     return Student.objects.get(user=request.user)
+
+
+def get_group(cur_student):
+    group = Student.objects.filter(room=cur_student.room).order_by('user__last_name', 'user__first_name')
+
+    return group
 
 
 def get_perm(permission):
@@ -374,6 +371,7 @@ def create_schedule(room):
         for time in default_time:
             Lesson.objects.create(day=i, start_time=time[0], end_time=time[1], schedule=room, num=k)
             k = k + 1
+
 
 @login_required()
 def add_data(request):
@@ -421,6 +419,7 @@ def edit_data(request):
                 StudyMaterial.objects.filter(id=post_data['id']).update(name=name, file=file)
     return redirect(get_path(data_name))
 
+
 @login_required()
 def delete_data(request):
     data_name = request.get_full_path().split('/')[-2]
@@ -446,6 +445,7 @@ def get_model_form_by_name(data_name):
     elif data_name == 'materials':
         return StudyMaterialForm
 
+
 def get_path(data_name):
     if data_name == '':
         return 'index'
@@ -453,3 +453,4 @@ def get_path(data_name):
         return 'contacts'
     elif data_name == 'materials':
         return 'materials'
+
