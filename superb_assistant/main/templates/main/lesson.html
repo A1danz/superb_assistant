@@ -28,36 +28,35 @@
                         {% csrf_token %}
                         <style>
                           .colortext {
-                            background-color: #35004F;
+                            background-color: transparent;
                             color: #FFFFFF;
                             border-radius: 15px;
                           }
                         </style>
-                        <input type="submit" class="colortext" name="change*{{key.0|date}}" value=" изм. ">
-                        <!--<svg xmlns="http://www.w3.org/2000/svg" width="14" height="13" fill="none">
+                        <button type="submit" class="colortext" name="change*{{key.0|date}}"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="13" fill="none">
                           <path fill="#2D004B"
                                 d="M12.846 6.502a.65.65 0 0 0-.65.65v3.899a.65.65 0 0 1-.65.65H2.45a.65.65 0 0 1-.65-.65V1.953a.65.65 0 0 1 .65-.65h3.9a.65.65 0 1 0 0-1.3h-3.9A1.95 1.95 0 0 0 .5 1.954v9.098A1.95 1.95 0 0 0 2.45 13h9.097a1.95 1.95 0 0 0 1.95-1.95V7.153a.65.65 0 0 0-.65-.65ZM3.1 6.996V9.75a.65.65 0 0 0 .65.65h2.755a.65.65 0 0 0 .462-.189l4.496-4.503 1.846-1.806a.65.65 0 0 0 0-.923L10.553.192a.65.65 0 0 0-.923 0l-1.833 1.84-4.51 4.502a.65.65 0 0 0-.188.462Zm6.992-5.426 1.84 1.839-.923.923-1.84-1.84.923-.922ZM4.4 7.262 8.252 3.41l1.84 1.839L6.237 9.1h-1.84V7.262Z"/>
-                        </svg>-->
+                        </svg><button>
                       </form>
                       {% endif %}
                     </div>
                     {% for student in group %}
-                      {% for status, people in list_by_status.items %}
-                        {% if student in people %}
-                          {% if status == 'vr' %}
-                            <div class="lesson__cell lesson__dear">УВ</div>
+                        {% for status, people in list_by_status.items %}
+                          {% if student in people %}
+                            {% if status == 'vr' %}
+                              <div class="lesson__cell lesson__dear">УВ</div>
+                            {% endif %}
+                            {% if status == 'ill' %}
+                              <div class="lesson__cell lesson__wasnt">Б</div>
+                            {% endif %}
+                            {% if status == 'abs' %}
+                              <div class="lesson__cell lesson__sick">Н</div>
+                            {% endif %}
+                            {% if status == 'be' %}
+                              <div class="lesson__cell"></div>
+                            {% endif %}
                           {% endif %}
-                          {% if status == 'ill' %}
-                            <div class="lesson__cell lesson__wasnt">Б</div>
-                          {% endif %}
-                          {% if status == 'abs' %}
-                            <div class="lesson__cell lesson__sick">Н</div>
-                          {% endif %}
-                          {% if status == 'be' %}
-                            <div class="lesson__cell"></div>
-                          {% endif %}
-                          {% endif %}
-                      {% endfor %}
+                        {% endfor %}
                     {% endfor %}
                   </div>
                   {% endfor %}

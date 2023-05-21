@@ -34,7 +34,7 @@ def signin(request):
                     return redirect('profile')
                 elif cur_student.state == 2:
                     context['state'] = 'Ваша заявка была отклонена. ' \
-                                       'Пожалуйста, попробуйте зарегестрироваться еще раз'
+                                       'Пожалуйста, попробуйте зарегистрироваться еще раз'
                     cur_student.delete()
                 elif cur_student.state == 0:
                     context['state'] = 'Ваша заявка находится на рассмотрении'
@@ -215,6 +215,7 @@ def lesson(request):
     dates_iterator = data.values_list('date').iterator()
     dates = sorted(set(i for i in dates_iterator))
     list_of_students_by_date = {}
+    list_of_students = {}
     for i in dates:
         temp = data.filter(date=i[0])
         list_by_status = {}
@@ -228,6 +229,7 @@ def lesson(request):
         'lesson_name': cur_lesson,
         'data_by_date': list_of_students_by_date,
         'navbar': 'lesson'
+
     }
     if 'date' in request.session:
         del request.session['date']
