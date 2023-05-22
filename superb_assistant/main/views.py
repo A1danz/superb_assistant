@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import date
+from itertools import chain
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -210,22 +211,32 @@ def log(request):
 @login_required()
 def lesson(request):
     cur_student = get_student(request)
+    group = get_group(cur_student)
     cur_lesson = request.session.get('lesson_name')
     data = AttendanceLog.objects.filter(room=cur_student.room, lesson=cur_lesson)
     dates_iterator = data.values_list('date').iterator()
     dates = sorted(set(i for i in dates_iterator))
     list_of_students_by_date = {}
-    list_of_students = {}
+
     for i in dates:
         temp = data.filter(date=i[0])
         list_by_status = {}
         for j in temp:
             list_by_status[j.status] = j.students.all()
+        list = []
+        for k in list_by_status.values():
+            list = list + [m for m in k]
+        none_students = []
+        if len(list) != len(group):
+            for s in group:
+                if s not in list:
+                    none_students.append(s)
+        list_by_status['none'] = none_students
         list_of_students_by_date[i] = list_by_status
 
     contex = {
         'perm': get_perm(cur_student.permission),
-        'group': get_group(cur_student),
+        'group': group,
         'lesson_name': cur_lesson,
         'data_by_date': list_of_students_by_date,
         'navbar': 'lesson'
@@ -246,13 +257,14 @@ def lesson(request):
         return redirect("lesson")
     return render(request, "main/lesson.html", context=contex)
 
+
 @login_required()
 def lesson_edit(request):
     cur_student = get_student(request)
     contex = {
         'group': get_group(cur_student),
         'lesson_name': request.session.get('lesson_name'),
-        'date' : request.session.get('date')
+        'date': request.session.get('date')
     }
     if request.method == 'POST':
         dict = defaultdict(list)
@@ -305,7 +317,10 @@ def profile(request):
         if request.POST.get('exit'):
             request.session.clear()
             logout(request)
-            return redirect('signin')
+        if request.POST.get('delete'):
+            user = User.objects.get(username=request.user)
+            user.delete()
+            return redirect('signup')
         if request.POST.get('firstname'):
             request.user.first_name = request.POST['firstname']
         if request.POST.get('lastname'):

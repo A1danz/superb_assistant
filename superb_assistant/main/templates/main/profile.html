@@ -19,11 +19,10 @@
           <input type="text" class="profile__input input" name="room" placeholder="группа" value={{room_name}}>
           {% endif %}
           <input type="submit" class="btn" name = 'save' value="СОХРАНИТЬ">
-          <form method="post">
-            <input type="submit" class="btn" name = 'exit' value="ВЫЙТИ" >
-          </form>
+
         </form>
       </div>
+
       <div class="profile__box">
         <h4 class="profile__title">
           ПАРОЛЬ
@@ -93,6 +92,13 @@
           {% endif %}
         </form>
         {% endfor %}
+      </div>
+          <div class="profile__box">
+        <form method="post" class="exitdelete">
+          {% csrf_token %}
+            <input type="submit" class="btn" name = 'exit' value="ВЫЙТИ" >
+            <input type="submit" class="btn" name = 'delete' value="УДАЛИТЬ ПРОФИЛЬ" >
+        </form>
       </div>
     </div>
   </div>
