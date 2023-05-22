@@ -15,7 +15,7 @@
               <div class="lesson__package">
                 <div class="lesson__names">
                   {% for student in group %}
-                  <div class="lesson__name">{{ student.user.first_name }} {{ student.user.last_name }}</div>
+                  <div class="lesson__name">{{ student.user.last_name }} {{ student.user.first_name }}</div>
                   {% endfor %}
                 </div>
                 <div class="lesson__table">

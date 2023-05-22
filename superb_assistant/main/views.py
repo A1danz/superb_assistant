@@ -220,19 +220,7 @@ def lesson(request):
 
     for i in dates:
         temp = data.filter(date=i[0])
-        list_by_status = {}
-        for j in temp:
-            list_by_status[j.status] = j.students.all()
-        list = []
-        for k in list_by_status.values():
-            list = list + [m for m in k]
-        none_students = []
-        if len(list) != len(group):
-            for s in group:
-                if s not in list:
-                    none_students.append(s)
-        list_by_status['none'] = none_students
-        list_of_students_by_date[i] = list_by_status
+        list_of_students_by_date[i] = get_list_by_status(temp, group)
 
     contex = {
         'perm': get_perm(cur_student.permission),
@@ -240,7 +228,6 @@ def lesson(request):
         'lesson_name': cur_lesson,
         'data_by_date': list_of_students_by_date,
         'navbar': 'lesson'
-
     }
     if 'date' in request.session:
         del request.session['date']
@@ -251,21 +238,56 @@ def lesson(request):
             return redirect("lesson_edit")
     if request.POST.get('delete'):
         temp = AttendanceLog.objects.filter(room=cur_student.room,
-                                            lesson=request.session.get('lesson_name'))
+                                            lesson=cur_lesson)
         if temp.exists():
             temp.delete()
         return redirect("lesson")
     return render(request, "main/lesson.html", context=contex)
 
 
+def get_list_by_status(log, group):
+    list_by_status = {}
+    for j in log:
+        list_by_status[j.status] = j.students.all()
+    list_of_students = []
+    for k in list_by_status.values():
+        list_of_students = list_of_students + [m for m in k]
+    if len(list_of_students) != len(group):
+        none_students = []
+        for s in group:
+            if s not in list_of_students:
+                none_students.append(s)
+        list_by_status['none'] = none_students
+    return list_by_status
+
+
 @login_required()
 def lesson_edit(request):
     cur_student = get_student(request)
+    lesson_name = request.session.get('lesson_name')
+    group = get_group(cur_student)
     contex = {
-        'group': get_group(cur_student),
-        'lesson_name': request.session.get('lesson_name'),
-        'date': request.session.get('date')
+        'group': group,
+        'lesson_name': lesson_name
     }
+    list_by_status = {}
+    group_with_status = {}
+    if request.session.get('date'):
+        fix_date = request.session.get('date')
+        contex['date'] = fix_date
+        this_log = AttendanceLog.objects.filter(room=cur_student.room, lesson=lesson_name, date=fix_date)
+        list_by_status = get_list_by_status(this_log, group)
+
+    if not list_by_status:
+        for student in group:
+            group_with_status[student] = 'be'
+    else:
+        for student in group:
+            for k, v in list_by_status.items():
+                if student in v:
+                    group_with_status[student] = k
+    contex['group_with_status'] = group_with_status
+
     if request.method == 'POST':
         dict = defaultdict(list)
         k = 0
@@ -331,6 +353,8 @@ def profile(request):
             room = cur_student.room
             room.name = request.POST['room']
             room.save()
+        #     TODO: NotImplementedError at /profile
+        # Django doesn't provide a DB representation for AnonymousUser.
         if request.user.check_password(request.POST.get('pass', False)):
             if request.POST['password1'] == request.POST['password2']:
                 if len(request.POST['password1']) < 8:
