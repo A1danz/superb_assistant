@@ -61,6 +61,7 @@ def signup(request):
         return redirect('index')
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
+        context = {'form': user_form}
         if user_form.is_valid():
             new_user = user_form.save(commit=False)
             new_user.first_name = request.POST['name']
@@ -74,15 +75,18 @@ def signup(request):
                        'Пожалуйста, подождите пока вашу заявку одобрят'
                 return render(request, 'main/signup.html', context={'info': info})
             else:
-                room = Room.objects.get(pk=request.POST['roomnum'])
-                new_user.save()
-                student = Student.objects.create(room=room, user=new_user, state=1)
-                student.save()
-                return redirect('profile')
+                if Room.objects.filter(pk=request.POST['roomnum']).exists():
+                    room = Room.objects.get(pk=request.POST['roomnum'])
+                    new_user.save()
+                    student = Student.objects.create(room=room, user=new_user, state=1)
+                    student.save()
+                    return redirect('profile')
+                else:
+                    context['errors'] = 'Вы ввели неправильный код группы'
+                    return render(request, "main/signup.html", context)
         else:
             json_data = user_form.errors.get_json_data()
             list = request.POST
-            context = {'form': user_form}
             if list['username'] == '' or list['password1'] == '' or list['password2'] == '':
                 context['errors'] = "Заполните все поля"
             elif 'username' in json_data:
@@ -287,7 +291,7 @@ def lesson_edit(request):
                 if student in v:
                     group_with_status[student] = k
     contex['group_with_status'] = group_with_status
-
+    AttendanceLog.objects.filter(room=cur_student.room, lesson=lesson_name, date=fix_date).delete()
     if request.method == 'POST':
         dict = defaultdict(list)
         k = 0
@@ -339,6 +343,7 @@ def profile(request):
         if request.POST.get('exit'):
             request.session.clear()
             logout(request)
+            return redirect("signin")
         if request.POST.get('delete'):
             user = User.objects.get(username=request.user)
             user.delete()
@@ -354,27 +359,27 @@ def profile(request):
             room.name = request.POST['room']
             room.save()
         #     TODO: NotImplementedError at /profile
-        # Django doesn't provide a DB representation for AnonymousUser.
-        if request.user.check_password(request.POST.get('pass', False)):
-            if request.POST['password1'] == request.POST['password2']:
-                if len(request.POST['password1']) < 8:
-                    contex['errors'] = "пароль должен состоять хотя бы из 8 символов"
-                else:
-                    hasnum = False
-                    haslet = False
-                    for i in request.POST['password1']:
-                        if i.isdigit():
-                            hasnum = True
-                        if i.isalpha():
-                            haslet = True
-                    if hasnum and haslet:
-                        request.user.set_password(request.POST['password1'])
+        if request.POST.get("password1"):
+            if request.user.check_password(request.POST.get('pass', False)):
+                if request.POST['password1'] == request.POST['password2']:
+                    if len(request.POST['password1']) < 8:
+                        contex['errors'] = "пароль должен состоять хотя бы из 8 символов"
                     else:
-                        contex['errors'] = 'Пароль должен содержать буквы и цифры'
+                        hasnum = False
+                        haslet = False
+                        for i in request.POST['password1']:
+                            if i.isdigit():
+                                hasnum = True
+                            if i.isalpha():
+                                haslet = True
+                        if hasnum and haslet:
+                            request.user.set_password(request.POST['password1'])
+                        else:
+                            contex['errors'] = 'Пароль должен содержать буквы и цифры'
+                else:
+                    contex['errors'] = "Введенные пароли не совпадают"
             else:
-                contex['errors'] = "Введенные пароли не совпадают"
-        else:
-            contex['errors'] = "Текущий пароль не верный"
+                contex['errors'] = "Текущий пароль не верный"
         request.user.save()
         for key in request.POST.keys():
             if 'del' in key:
