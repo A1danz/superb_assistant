@@ -5,6 +5,7 @@ from itertools import chain
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.core.files.storage import default_storage
 from django.contrib.auth import authenticate, login, logout
 from django.template.defaultfilters import upper
 from django.template.defaulttags import register
@@ -448,17 +449,25 @@ def create_schedule(room):
 @login_required()
 def add_data(request):
     data_name = request.get_full_path().split('/')[-2]
-    print(data_name)
-    print(request.get_full_path())
     if request.method == "POST":
         post_data = request.POST.dict()
+        print(post_data)
+        print(request.FILES)
         post_data["room"] = get_student(request).room
+
+        file = request.FILES['file']
+        file_name = default_storage.save(file.name, file)
+
+        post_data['file'] = default_storage.url(file_name)
         model = get_model_form_by_name(data_name)
-        form = model(post_data)
-        print(contacts, " - ", model)
+
+        print(post_data)
+        form = model(post_data, request.FILES)
+
         json_data = form.errors.get_json_data()
         print(post_data)
         print(json_data)
+
         if form.is_valid():
             form.save()
             return redirect(get_path(data_name))

@@ -5,9 +5,10 @@ $btn.addEventListener('click', openModal);
 function openModal() {
   document.querySelector('.modal__title').textContent = 'НОВЫЙ МАТЕРИАЛ';
   document.querySelector('.modal__btn').value = "ДОБАВИТЬ";
-  document.querySelector('.modal__form').action = "/add_post";
+  document.querySelector('.modal__form').action = "materials/add_data";
   document.querySelector('.modal__input-name').value = '';
   document.querySelector('.modal__input-link').value = '';
+  document.querySelector('.modal__input-file').value = '';
   modal.style.display = 'block';
   document.querySelector('body').style.overflowY = 'hidden';
   document.querySelector('.modal__btn').addEventListener('click', createCell);
@@ -61,7 +62,7 @@ function openModalChange(e) {
   let parent = e.target.closest('.train-material__cell');
   document.querySelector('.modal__title').textContent = 'ИЗМЕНИТЬ МАТЕРИАЛ';
   document.querySelector('.modal__btn').value = "ИЗМЕНИТЬ";
-  document.querySelector('.modal__form').action = "/edit_post";
+  document.querySelector('.modal__form').action = "materails/edit_data";
   document.querySelector('.modal__input-name').value = parent.querySelector('.train-material__title').textContent.trim();
   document.querySelector('.modal__input-link').value = parent.querySelector('.train-material__link').textContent.trim();
   modal.style.display = 'block';

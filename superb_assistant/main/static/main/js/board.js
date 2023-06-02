@@ -69,7 +69,7 @@ function openModalChange(e) {
   let parent = e.target.closest('.board__cell');
   document.querySelector('.modal__title').textContent = 'ИЗМЕНИТЬ МАТЕРИАЛ';
   document.querySelector('.modal__btn').value = "ИЗМЕНИТЬ";
-  document.querySelector('.modal__form').action = "contacts/edit_data";
+  document.querySelector('.modal__form').action = "edit_data";
   document.querySelector('.input__hidden').value = e.target.dataset.id;
   document.querySelector('.modal__input-name').value = parent.querySelector('.board__title').textContent.trim();
   document.querySelector('.modal__textarea').value = parent.querySelector('.board__text').textContent.trim();

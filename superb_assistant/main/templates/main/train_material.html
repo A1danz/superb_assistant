@@ -35,11 +35,12 @@
       <h4 class="modal__title">
         НОВЫЙ МАТЕРИАЛ
       </h4>
-      <form class="modal__form" action="">
-
-        <input type="text" class="modal__input modal__input-name input" placeholder="название материала">
-        <input type="text" class="modal__input modal__input-link input" placeholder="ссылка на материал">
-        <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
+      <form class="modal__form" action="materials/add_data" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input name="file" type="file" class="modal__input modal__input-file input">
+          <input name="name" type="text" class="modal__input modal__input-name input" placeholder="название материала">
+          <input type="text" class="modal__input modal__input-link input" placeholder="link">
+          <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
       </form>
       <i class="modal__icon uil uil-times"></i>
     </div>
