@@ -485,8 +485,9 @@ def edit_data(request):
         form = None
 
         if model == StudyMaterialForm:
-            file = request.FILES['file']
+            file = request.FILES
             if file:
+                file = file['file']
                 file_name = default_storage.save(file.name, file)
 
                 post_data['file'] = file_name
