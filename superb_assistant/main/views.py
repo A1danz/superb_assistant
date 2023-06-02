@@ -484,16 +484,22 @@ def edit_data(request):
         post_data = request.POST.dict()
         post_data["room"] = get_student(request).room
         model = get_model_form_by_name(data_name)
+        form = None
 
         if model == StudyMaterialForm:
             file = request.FILES['file']
-            file_name = default_storage.save(file.name, file)
+            if file:
+                file_name = default_storage.save(file.name, file)
 
-            post_data['file'] = file_name
-            form = model(post_data, request.FILES)
+                post_data['file'] = file_name
+                form = model(post_data, request.FILES)
+            else:
+                name = post_data['name']
+                if name:
+                    StudyMaterial.objects.filter(id=post_data["id"]).update(name=name)
         else:
             form = model(post_data)
-        if form.is_valid():
+        if form is not None and form.is_valid():
             if model == PostForm:
                 title = post_data['title']
                 text = post_data['text']
