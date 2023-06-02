@@ -37,7 +37,8 @@ def signin(request):
                 elif cur_student.state == 2:
                     context['state'] = 'Ваша заявка была отклонена. ' \
                                        'Пожалуйста, попробуйте зарегистрироваться еще раз'
-                    cur_student.delete()
+                    cur_student.room.delete()
+                    cur_student.user.delete()
                 elif cur_student.state == 0:
                     context['state'] = 'Ваша заявка находится на рассмотрении'
 
@@ -104,9 +105,6 @@ def signup(request):
 
 @login_required()
 def index(request):
-    if request.method == "POST":
-        print("board post-requets")
-        print("board post-requets")
     cur_student = get_student(request)
     posts = Post.objects.filter(room=cur_student.room).order_by('-time')
 
@@ -513,7 +511,6 @@ def edit_data(request):
 @login_required()
 def delete_data(request):
     data_name = request.get_full_path().split('/')[-2]
-    print(data_name)
     if request.method == "POST":
         if data_name == '':
             model = Post
