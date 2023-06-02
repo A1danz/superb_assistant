@@ -324,7 +324,7 @@ body {
 .btn {
   display: inline-block;
   padding: 20px 30px;
-  background-color: #110019;
+  background-color: transparent;
   border: 4px solid #FFFFFF;
   border-radius: 20px;
   font-weight: 700;
@@ -387,6 +387,17 @@ body {
   margin: 40px 0;
 }
 
+.colortext {
+    background: transparent;
+}
+
+.colortext path {
+    transition: all .3s;
+}
+
+.colortext:hover path {
+    fill: white;
+}
 .timetable__container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -418,6 +429,7 @@ body {
   color: #FFFFFF;
 }
 .timetable__cell {
+  min-height: 116px;
   background: #D394FF;
   border-radius: 20px;
   width: 186px;
@@ -1170,7 +1182,7 @@ body {
   color: #FFFFFF;
 }
 .lessonedit__input {
-  width: 150px;
+  width: 250px;
   height: 50px;
   text-align: center;
 }
@@ -1276,4 +1288,9 @@ body {
  .timetable__input::placeholder {
   color: #8E54B7;
   font-size: 16px;
+}
+
+.exitdelete {
+    display: flex;
+    gap: 20px;
 }
