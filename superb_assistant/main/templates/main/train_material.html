@@ -17,10 +17,12 @@
                   <a class="train-material__link" href="materials/{{ elem.id }}">{{ elem.file }}</a>
                     {% if perm %}
                       <div class="train-material__btns">
-                        <button class="mini-btn btn-change">ИЗМЕНИТЬ</button>
-                        <button class="mini-btn btn-cancel">
-                          УДАЛИТЬ
-                        </button>
+                        <button class="mini-btn btn-change" data-id="{{ elem.id }}">ИЗМЕНИТЬ</button>
+                        <form action="materials/delete_data" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ elem.id }}">
+                            <input type="submit" class="mini-btn btn-cancel" data-id="{{ elem.id }}" value="УДАЛИТЬ">
+                        </form>
                       </div>
                     {% endif %}
                 </div>
@@ -37,9 +39,9 @@
       </h4>
       <form class="modal__form" action="materials/add_data" method="post" enctype="multipart/form-data">
           {% csrf_token %}
+          <input type="hidden" name="id" class="input__hidden" value="">
           <input name="file" type="file" class="modal__input modal__input-file input">
           <input name="name" type="text" class="modal__input modal__input-name input" placeholder="название материала">
-          <input type="text" class="modal__input modal__input-link input" placeholder="link">
           <input type="submit" class="modal__btn btn" value="ДОБАВИТЬ">
       </form>
       <i class="modal__icon uil uil-times"></i>

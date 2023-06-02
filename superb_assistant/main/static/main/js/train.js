@@ -7,42 +7,10 @@ function openModal() {
   document.querySelector('.modal__btn').value = "ДОБАВИТЬ";
   document.querySelector('.modal__form').action = "materials/add_data";
   document.querySelector('.modal__input-name').value = '';
-  document.querySelector('.modal__input-link').value = '';
   document.querySelector('.modal__input-file').value = '';
   modal.style.display = 'block';
   document.querySelector('body').style.overflowY = 'hidden';
   document.querySelector('.modal__btn').addEventListener('click', createCell);
-
-  function createCell(e) {
-    let link = document.querySelector('.modal__input-link').value;
-    let name = document.querySelector('.modal__input-name').value;
-    if (link && name) {
-      notify('материал создан')
-      let cell = document.createElement('div');
-      cell.classList.add("train-material__cell");
-
-      cell.innerHTML = `
-                <h4 class="train-material__title">
-                  ${name}
-                </h4>
-                <a class="train-material__link" href="https://${link}">${link}</a>
-                <div class="train-material__btns">
-                  <button class="mini-btn btn-change">ИЗМЕНИТЬ</button>
-                  <button class="mini-btn btn-cancel">
-                    УДАЛИТЬ
-                  </button>
-                </div>
-      `
-      cell.querySelector('.btn-change').addEventListener('click', openModalChange);
-      cell.querySelector('.btn-cancel').addEventListener('click', deleteCell);
-      document.querySelector('.train-material__container').append(cell);
-    } else {
-      notify('невозможно создать пустой материал')
-    }
-
-    close();
-    document.querySelector('.modal__btn').removeEventListener('click', createCell);
-  }
 }
 
 document.querySelector('.modal__overlay').addEventListener('click', closeModal);
@@ -60,31 +28,15 @@ btnChange.forEach((btn) => {
 
 function openModalChange(e) {
   let parent = e.target.closest('.train-material__cell');
-  document.querySelector('.modal__title').textContent = 'ИЗМЕНИТЬ МАТЕРИАЛ';
+  document.querySelector('.modal__title').textContent = parent.querySelector('.train-material__link').textContent.trim();
   document.querySelector('.modal__btn').value = "ИЗМЕНИТЬ";
-  document.querySelector('.modal__form').action = "materails/edit_data";
+  document.querySelector('.modal__form').action = "materials/edit_data";
+  document.querySelector('.input__hidden').value = e.target.dataset.id;
   document.querySelector('.modal__input-name').value = parent.querySelector('.train-material__title').textContent.trim();
-  document.querySelector('.modal__input-link').value = parent.querySelector('.train-material__link').textContent.trim();
   modal.style.display = 'block';
   document.querySelector('body').style.overflowY = 'hidden';
 
   document.querySelector('.modal__btn').addEventListener('click', changeCell);
-
-  function changeCell(e) {
-    let name = document.querySelector('.modal__input-name').value;
-    let link = document.querySelector('.modal__input-link').value;
-    if (name === '' || link === '') {
-      notify('материал удален');
-      parent.remove();
-    } else {
-      notify('материал изменен');
-      parent.querySelector('.train-material__title').textContent = name;
-      parent.querySelector('.train-material__link').textContent = link;
-      parent.querySelector('.train-material__link').href = 'https://' + link;
-    }
-    close();
-    document.querySelector('.modal__btn').removeEventListener('click', changeCell);
-  }
 }
 
 let btnCancel = document.querySelectorAll('.btn-cancel')

@@ -24,5 +24,4 @@ urlpatterns = [
     path('contacts/edit_data', views.edit_data, name='edit_data'),
     path('contacts/delete_data', views.delete_data, name='delete_data'),
 
-
 ]

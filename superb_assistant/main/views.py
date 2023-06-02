@@ -454,15 +454,16 @@ def add_data(request):
         print(post_data)
         print(request.FILES)
         post_data["room"] = get_student(request).room
-
-        file = request.FILES['file']
-        file_name = default_storage.save(file.name, file)
-
-        post_data['file'] = default_storage.url(file_name)
         model = get_model_form_by_name(data_name)
 
-        print(post_data)
-        form = model(post_data, request.FILES)
+        if model == StudyMaterialForm:
+            file = request.FILES['file']
+            file_name = default_storage.save(file.name, file)
+
+            post_data['file'] = file_name
+            form = model(post_data, request.FILES)
+        else:
+            form = model(post_data)
 
         json_data = form.errors.get_json_data()
         print(post_data)
@@ -483,7 +484,15 @@ def edit_data(request):
         post_data = request.POST.dict()
         post_data["room"] = get_student(request).room
         model = get_model_form_by_name(data_name)
-        form = model(post_data)
+
+        if model == StudyMaterialForm:
+            file = request.FILES['file']
+            file_name = default_storage.save(file.name, file)
+
+            post_data['file'] = file_name
+            form = model(post_data, request.FILES)
+        else:
+            form = model(post_data)
         if form.is_valid():
             if model == PostForm:
                 title = post_data['title']
