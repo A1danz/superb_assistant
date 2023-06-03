@@ -1,18 +1,13 @@
 from collections import defaultdict
 from datetime import date
-from itertools import chain
-
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.core.files.storage import default_storage
 from django.contrib.auth import authenticate, login, logout
 from django.template.defaultfilters import upper
 from django.template.defaulttags import register
-
-from .models import Post, AttendanceLog, Contact, StudyMaterial, Student, Lesson, Room
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse, FileResponse
+from django.http import FileResponse
 from .forms import *
 
 
@@ -28,7 +23,7 @@ def signin(request):
 
             user = authenticate(username=uservalue, password=passwordvalue)
             context = {'form': form,
-                        'error': 'Логин или пароль неверны'}
+                       'error': 'Логин или пароль неверны'}
             if user is not None and Student.objects.filter(user=user).exists():
                 cur_student = Student.objects.get(user=user)
                 if cur_student.state == 1:
@@ -280,6 +275,7 @@ def lesson_edit(request):
         contex['date'] = fix_date
         this_log = AttendanceLog.objects.filter(room=cur_student.room, lesson=lesson_name, date=fix_date)
         list_by_status = get_list_by_status(this_log, group)
+        this_log.delete()
 
     if not list_by_status:
         for student in group:
@@ -290,7 +286,7 @@ def lesson_edit(request):
                 if student in v:
                     group_with_status[student] = k
     contex['group_with_status'] = group_with_status
-    AttendanceLog.objects.filter(room=cur_student.room, lesson=lesson_name, date=fix_date).delete()
+    # AttendanceLog.objects.filter(room=cur_student.room, lesson=lesson_name, date=fix_date).delete()
     if request.method == 'POST':
         dict = defaultdict(list)
         k = 0
@@ -392,7 +388,6 @@ def profile(request):
                 student.permission = 1
                 student.save()
 
-
     return render(request, "main/profile.html", context=contex)
 
 
@@ -403,7 +398,6 @@ def get_item(dict, key):
 
 @login_required()
 def download_material(request, video_id):
-    # TODO: сделать верификацию пользователя
     obj = StudyMaterial.objects.get(id=video_id)
     filename = obj.file.path
 
@@ -547,4 +541,3 @@ def get_path(data_name):
         return 'contacts'
     elif data_name == 'materials':
         return 'materials'
-
